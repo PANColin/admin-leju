@@ -141,7 +141,8 @@ export const constantRoutes = [
       {
         path: 'homeRecommendList',
         name: 'homeRecommendList',
-        component: () => import('@/views/homeRecommend/homeRecommendList/index'),
+        component: () =>
+          import('@/views/homeRecommend/homeRecommendList/index'),
         meta: { title: '营销列表', icon: 'el-icon-s-marketing' }
       },
       {

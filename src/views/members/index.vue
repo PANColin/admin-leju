@@ -1,8 +1,13 @@
 <template>
   <div>
     <el-card style="width:95%;margin: 20px auto;">
-      <el-table :data="list" style="width: 100%">
-        <el-table-column align="center" type="index" label="序号" />
+      <el-table v-loading="loading" :data="list" style="width: 100%">
+        <el-table-column
+          fixed="left"
+          align="center"
+          type="index"
+          label="序号"
+        />
         <el-table-column
           align="center"
           prop="username"
@@ -73,6 +78,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       list: [],
       pageInfo: {
         start: 1,
@@ -94,17 +100,21 @@ export default {
         "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
     },
     async init() {
+      this.loading = true;
       const res = await findMembersByPage(
         this.pageInfo.start,
         this.pageInfo.limit
       );
       // console.log(res)
+      if (!res.success) return this.$message.error(res.message);
+      this.loading = false;
       this.total = res.data.total;
       this.list = res.data.rows;
       res.data.rows.forEach(el => {
         // console.log(el)
-        el.sex = el.sex ? '女':'男',
-        el.icon ||= "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
+        (el.sex = el.sex ? "女" : "男"),
+          (el.icon ||=
+            "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg");
       });
     },
     // 当前每页显示的条数变化的时候触发

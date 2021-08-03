@@ -1,20 +1,486 @@
 <template>
   <div>
-    商品列表
+    <el-card shadow="hover" :body-style="{ padding: '0px' }">
+      <div
+        slot="header"
+        @click="isShowDec = !isShowDec"
+        style="cursor: pointer;"
+      >
+        <span>商品管理介绍</span>
+      </div>
+      <p v-show="isShowDec" style="padding:20px">
+        商品管理模块可以对客户端的商品进行增删改查等相关操作,来控制客户端商品的列表展示和商品详情
+      </p>
+    </el-card>
+
+    <el-card
+      shadow="hover"
+      :body-style="{ paddingTop: '20px', paddingBottom: '0' }"
+    >
+      <div slot="header" @click="isShow = !isShow" style="cursor: pointer;">
+        <span>条件查询</span>
+      </div>
+      <el-form
+        v-show="isShow"
+        :model="searchForm"
+        ref="ruleForm"
+        :rules="rules"
+        label-width="80px"
+        :inline="false"
+        size="normal"
+      >
+        <el-row :gutter="20">
+          <el-col :span="6" :offset="0">
+            <el-form-item label="商品名称" prop="name">
+              <el-input
+                v-model.trim="searchForm.name"
+                placeholder="请输入商品名称"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="0">
+            <el-form-item label="商品货号" prop="productSn">
+              <el-input
+                v-model.trim="searchForm.productSn"
+                placeholder="请输入商品货号"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="0">
+            <el-form-item label="品牌" prop="brandId">
+              <el-select
+                v-model="searchForm.brandId"
+                name="brandId"
+                clearable
+                placeholder="品牌"
+              >
+                <el-option
+                  v-for="item in brandList"
+                  :key="item.brandId"
+                  :label="item.brandName"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="0">
+            <el-form-item label="上架状态" prop="publishStatus">
+              <el-select
+                v-model="searchForm.publishStatus"
+                name="publishStatus"
+                clearable
+                placeholder="上架状态"
+              >
+                <el-option
+                  v-for="(item, index) in publishStatusList"
+                  :key="index"
+                  :label="item.lable"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6" :offset="0">
+            <el-form-item label="审核状态" prop="verifyStatus">
+              <el-select
+                v-model="searchForm.verifyStatus"
+                name="verifyStatus"
+                clearable
+                placeholder="审核状态"
+              >
+                <el-option
+                  v-for="(item, index) in verifyStatusList"
+                  :key="index"
+                  :label="item.lable"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="12">
+            <el-form-item>
+              <el-button type="primary" @click="onSearch('ruleForm')"
+                >查询</el-button
+              >
+              <el-button @click="onCancle('ruleForm')">取消</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
+
+    <el-card>
+      <el-table
+        v-loading="loading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        border
+        :data="list"
+        style="width: 100%"
+      >
+        <el-table-column
+          align="center"
+          type="index"
+          label="序号"
+          width="50"
+          fixed="left"
+        />
+
+        <el-table-column align="center" label="商品图片" width="110">
+          <template slot-scope="scope">
+            <img
+              :src="scope.row.pic"
+              width="100"
+              height="110"
+              @error="handleError(scope.row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="name"
+          label="商品名称"
+          show-overflow-tooltip
+          width="160"
+        />
+        <el-table-column
+          align="center"
+          prop="brandName"
+          label="品牌名称"
+          width="160"
+        />
+        <el-table-column
+          align="center"
+          prop="description"
+          show-overflow-tooltip
+          label="商品描述"
+          width="160"
+        />
+        <el-table-column align="center" label="商品价格" width="160">
+          <template slot-scope="scope">
+            <el-tag type="info" effect="dark">
+              原价: {{ scope.row.originalPrice }}
+            </el-tag>
+            <el-tag type="danger" effect="dark">
+              现价: {{ scope.row.price }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="productCategoryName"
+          label="商品类别"
+          width="100"
+        />
+        <el-table-column align="center" label="标签" width="180">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.newStatus"
+              active-color="#13ce66"
+              inactive-color="#999"
+              active-text="最新"
+              inactive-text="过时"
+              active-value="1"
+              :inactive-value="0"
+            />
+            <el-switch
+              v-model="scope.row.recommendStatus"
+              active-color="#13ce66"
+              inactive-color="#999"
+              active-text="推荐"
+              inactive-text="不推荐"
+              :active-value="1"
+              :inactive-value="0"
+            />
+            <el-switch
+              v-model="scope.row.publishStatus"
+              active-color="#13ce66"
+              inactive-color="#999"
+              active-text="发布"
+              inactive-text="未发布"
+              :active-value="1"
+              :inactive-value="0"
+            />
+            <el-switch
+              v-model="scope.row.verifyStatus"
+              active-color="#13ce66"
+              inactive-color="#999"
+              active-text="审核"
+              inactive-text="未审核"
+              :active-value="1"
+              :inactive-value="0"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="sku" width="100">
+          <template slot-scope="scope">
+            <el-button type="text" @click="editSku(scope.row.id)"
+              >编辑sku</el-button
+            >
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="createTime"
+          label="添加时间"
+          width="100"
+        />
+
+        <el-table-column align="center" label="是否展示" width="120">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.isShow"
+              active-color="#13ce66"
+              inactive-color="#999"
+              :active-value="1"
+              :inactive-value="0"
+            >
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          label="浏览量/点赞量/收藏量"
+          width="160"
+        >
+          <template slot-scope="scope">
+            <el-tag type="info" hit effect="dark">
+              浏览数量:{{ scope.row.viewCount }}
+            </el-tag>
+            <el-tag type="danger" effect="light">
+              点赞数量:{{ scope.row.zanCount }}
+            </el-tag>
+            <el-tag type="success" effect="plain">
+              收藏数量:{{ scope.row.collectCount }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="weight"
+          label="重量"
+          width="100"
+        />
+        <el-table-column align="center" prop="sort" label="排序" width="100" />
+        <el-table-column
+          label="操作"
+          width="160px"
+          align="center"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="edit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button type="danger" size="mini" @click="del(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页效果 -->
+      <el-pagination
+        class="pagination"
+        background
+        :current-page="pageInfo.start"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pageInfo.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="SizeChange"
+        @current-change="CurrentChange"
+      />
+    </el-card>
     <copyright></copyright>
   </div>
 </template>
-
 <script>
 import copyright from "@/components/copyright/index.vue";
+import {
+  addProductAndSkus,
+  del,
+  productSkusDetail,
+  productsByPage as productsByPageAPI,
+  switchNewStatus,
+  switchPreviewStatus,
+  switchPublishStatus,
+  switchRecommandStatus,
+  switchVerifyStatus,
+  updateProductAndSkus
+} from "@/api/products/index";
 export default {
   name: "goodsList",
+
   components: { copyright },
+
   data() {
-    return {};
+    return {
+      loading: false,
+      //是否显示条件介绍卡片
+      isShowDec: false,
+      //是否显示条件查询卡片
+      isShow: false,
+      list: [],
+      pageInfo: {
+        start: 1,
+        limit: 10
+      },
+      // 搜索部分选择的审核状态列表
+      verifyStatusList: [
+        { id: 1, lable: "未审核", value: "0" },
+        { id: 1, lable: "已审核", value: "1" }
+      ],
+      // 搜索部分选择的上架状态列表
+      publishStatusList: [
+        { id: 1, lable: "未上架", value: "0" },
+        { id: 1, lable: "已上架", value: "1" }
+      ],
+      // 搜索部分选择的品牌列表
+      brandList: [
+        {
+          brandId: "1329320162080423937",
+          brandName: "东易日盛家居装饰",
+          value: "1329320162080423937"
+        },
+        {
+          brandId: "1328952247757930497",
+          brandName: "侑家良品",
+          value: "1328952247757930497"
+        },
+        {
+          brandId: "1328880034681815042",
+          brandName: "简野 (JIANYE)",
+          value: "1328880034681815042"
+        },
+        {
+          brandId: "1328964991345328130",
+          brandName: "家乐名品 (JLVP)",
+          value: "1328964991345328130"
+        },
+        {
+          brandId: "1328990701308968962",
+          brandName: "雷士照明",
+          value: "1328990701308968962"
+        },
+        {
+          brandId: "1328988221644832769",
+          brandName: "东易日盛",
+          value:'1328988221644832769'
+        }
+      ],
+      searchForm: {
+        name: "",
+        brandId: "",
+        productSn: "",
+        publishStatus: "",
+        verifyStatus: ""
+      },
+      rules: {
+        name: [
+          // {required: true, message: "请输入作者姓名", trigger: "blur" },
+          { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" }
+        ],
+        productSn: [
+          // { required: true, message: "请选择请输入标题", trigger: "change" },
+          { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" }
+        ]
+      },
+      total: 0
+    };
   },
-  methods: {}
+
+  async mounted() {
+    this.productsByPage();
+  },
+
+  methods: {
+    // 编辑sku
+    editSku(id) {
+      console.log("skuId", id);
+    },
+    // 编辑
+    edit(item) {
+      console.log(item);
+    },
+    // 删除
+    del(item) {
+      console.log(item);
+    },
+    // 条件查询取消按钮
+    onCancle(formName) {
+      this.$refs[formName].resetFields();
+      this.productsByPage();
+    },
+    // 条件查询确定按钮
+    onSearch(formName) {
+      console.log(this.searchForm);
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          const { name, productSn } = this.searchForm;
+          if (!name && !productSn) {
+            this.$message.warning("请至少输入一项进行查询");
+          } else {
+            this.productsByPage();
+            // 重置分页数据
+            this.pageInfo.start = 1;
+            this.pageInfo.limit = 10;
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    //图片加载错误回调
+    handleError(val) {
+      // console.log(val)
+      // console.log('error')
+      val.icon =
+        "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
+    },
+    async productsByPage() {
+      this.loading = true;
+      const res = await productsByPageAPI(
+        this.pageInfo.start,
+        this.pageInfo.limit,
+        this.searchForm
+      );
+      if (!res.success) return this.$message.error(res.message);
+      this.loading = false;
+      // console.log(res);
+      this.total = res.data.total;
+      this.list = res.data.rows;
+      res.data.rows.forEach(el => {
+        // console.log(el)
+        el.icon ||=
+          "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
+      });
+    },
+    // 当前每页显示的条数变化的时候触发
+    SizeChange(newsize) {
+      // console.log("size",newsize);
+      this.pageInfo.limit = newsize;
+      this.productsByPage();
+    },
+    // 当前页码发生变化的时候触发
+    CurrentChange(newcurrent) {
+      // console.log("current",newcurrent);
+      this.pageInfo.start = newcurrent;
+      this.productsByPage();
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.pagination {
+  margin-bottom: 80px;
+  margin-top: 10px;
+}
+</style>
