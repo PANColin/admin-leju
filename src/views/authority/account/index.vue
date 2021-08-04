@@ -192,7 +192,6 @@ export default {
       if (!res.success) return this.$message.error(res.message);
       this.total = res.data.total;
       this.list = res.data.rows;
-      if (!res.success) return this.$message.error(res.message);
       this.loading = false;
       res.data.rows.forEach(el => {
         // console.log(el)

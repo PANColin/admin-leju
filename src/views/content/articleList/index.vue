@@ -49,6 +49,9 @@
     </el-card>
 
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" icon="el-icon-plus" @click="add"
+        >新增</el-button
+      >
       <el-table v-loading="loading" border :data="list" style="width: 100%">
         <el-table-column
           align="center"
@@ -67,7 +70,7 @@
         <el-table-column align="center" label="展示图片" width="110">
           <template slot-scope="scope">
             <img
-              :src="scope.row.icon"
+              :src="scope.row.coverImg"
               width="100"
               height="110"
               @error="handleError(scope.row)"
@@ -139,9 +142,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <!-- <el-button type="danger" size="mini" @click="del(scope.row)"
+              >删除</el-button> -->
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button slot="reference" size="mini">删除</el-button>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -208,13 +216,24 @@ export default {
   },
 
   methods: {
+    // 新增
+    add() {
+      // console.log(111);
+      this.$router.push({ name: "articleListAdd" });
+    },
     // 编辑
     edit(item) {
       console.log(item);
+      this.$router.push({ name: "articleListEdit", params: { id: item.id } });
     },
     // 删除
-    del(item) {
+    async del(item) {
       console.log(item);
+      const { success, message } = await del(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      //重新刷新当前页面
+      this.$router.go(0);
     },
     // 条件查询取消按钮
     onCancle(formName) {
@@ -255,7 +274,7 @@ export default {
         this.pageInfo.limit,
         this.searchForm
       );
-      // console.log(res);
+      console.log(res);
       if (!res.success) return this.$message.error(res.message);
       this.loading = false;
       this.total = res.data.total;

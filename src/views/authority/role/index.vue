@@ -129,7 +129,6 @@ export default {
       this.loading = false;
       this.total = res.data.total;
       this.list = res.data.rows;
-      if (!res.success) return this.$message.error(res.message);
       res.data.rows.forEach(el => {
         // console.log(el)
         el.icon ||=

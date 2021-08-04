@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper-copyright">
     <div class="row1">
       <span>Element</span>
       <a href="https://github.com/PanJiaChen/vue-element-admin" target="blank">
