@@ -13,8 +13,15 @@ export default {
 .el-tag {
   margin: 10px !important;
 }
-.el-card {
+.el-card,
+.el-collapse {
   width: 95%;
   margin: 10px auto;
+}
+.el-card {
+  text-indent: 0;
+}
+.el-collapse {
+  text-indent: 20px;
 }
 </style>

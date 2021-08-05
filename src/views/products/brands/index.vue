@@ -1,6 +1,17 @@
 <template>
   <div>
+    <detail
+      ref="editBrand"
+      :logo="editBrand.logo"
+      :bigImg="editBrand.bigPic"
+      :editBrand="editBrand"
+      @refrush="getBrandList"
+    />
+    <!-- <detail ref="editBrand" :editBrand="editBrand" @refrush="getBrandList" /> -->
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" icon="el-icon-plus" @click="add"
+        >新增</el-button
+      >
       <el-table v-loading="loading" fit border :data="list" style="width: 100%">
         <el-table-column
           align="center"
@@ -25,8 +36,7 @@
               inactive-text="不展示"
               :active-value="1"
               :inactive-value="0"
-            >
-            </el-switch>
+            />
           </template>
         </el-table-column>
         <el-table-column align="center" label="logo" width="120">
@@ -93,9 +103,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button type="danger" slot="reference" size="mini"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -112,10 +127,11 @@
         @current-change="CurrentChange"
       />
     </el-card>
-    <copyright></copyright>
+    <copyright />
   </div>
 </template>
 <script>
+import Detail from "./Detail.vue";
 import copyright from "@/components/copyright/index.vue";
 import {
   addBrand,
@@ -126,9 +142,9 @@ import {
   updateBrand
 } from "@/api/brand/index";
 export default {
-  name: "brands",
+  name: "Brands",
 
-  components: { copyright },
+  components: { copyright, Detail },
 
   data() {
     return {
@@ -138,7 +154,9 @@ export default {
         start: 1,
         limit: 10
       },
-      total: 0
+      total: 0,
+      // 点击编辑赋予的对象
+      editBrand: {}
     };
   },
 
@@ -147,15 +165,42 @@ export default {
   },
 
   methods: {
+    // 新增
+    add() {
+      //清空编辑的信息
+      this.editBrand = {};
+      // console.log(this.$refs.editBrand)
+      this.$refs.editBrand.clearAll();
+      this.$refs.editBrand.openDialog();
+    },
+    // 点击确认按钮刷新列表
+    async getBrandList(e) {
+      // console.log(e);
+      // console.log("执行刷新");
+      //有id 表示编辑否则添加
+      let api = e.id ? updateBrand : addBrand;
+
+      const { success, message } = await api(e);
+      if (!success) return this.$message.error(message);
+      this.$message.success("保存成功");
+      //刷新列表
+      this.findBrandByPage();
+    },
     // 编辑
     edit(item) {
-      console.log(item);
+      // console.log(item);
+      this.editBrand = item;
+      this.$refs.editBrand.openDialog();
     },
     // 删除
-    del(item) {
-      console.log(item);
+    async del(item) {
+      // console.log(item);
+      const { success, message } = await delBrand(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      this.findBrandByPage();
     },
-    //图片加载错误回调
+    // 图片加载错误回调
     handleError(val) {
       // console.log(val)
       // console.log('error')

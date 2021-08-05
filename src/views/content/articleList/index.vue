@@ -233,7 +233,8 @@ export default {
       if (!success) return this.$message.error(message);
       this.$message.success("删除成功");
       //重新刷新当前页面
-      this.$router.go(0);
+      // this.$router.go(0);
+      this.findArticles();
     },
     // 条件查询取消按钮
     onCancle(formName) {

@@ -1,6 +1,16 @@
 <template>
   <div>
+    <detail
+      ref="editBrand"
+      :logo="editBrand.logo"
+      :bigImg="editBrand.bigPic"
+      :editBrand="editBrand"
+      @refrush="getBrandList"
+    />
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" icon="el-icon-plus" @click="add"
+        >新增</el-button
+      >
       <el-table
         v-loading="loading"
         border
@@ -79,6 +89,7 @@
   </div>
 </template>
 <script>
+import Detail from "./Detail.vue";
 import copyright from "@/components/copyright/index.vue";
 import {
   findAllRoles,
@@ -91,10 +102,11 @@ import {
 export default {
   name: "Role",
 
-  components: { copyright },
+  components: { copyright, Detail },
 
   data() {
     return {
+      editBrand:{},
       loading: false,
       list: [],
       pageInfo: {
@@ -110,9 +122,31 @@ export default {
   },
 
   methods: {
+    // 新增
+    add() {
+      //清空编辑的信息
+      this.editBrand = {};
+      // console.log(this.$refs.editBrand)
+      this.$refs.editBrand.openDialog();
+    },
+    // 点击确认按钮刷新列表
+    async getBrandList(e) {
+      // console.log(e);
+      // console.log("执行刷新");
+      //有id 表示编辑否则添加
+      // let api = e.id ? updateBrand : addBrand;
+
+      // const { success, message } = await api(e);
+      // if (!success) return this.$message.error(message);
+      this.$message.success("保存成功");
+      //刷新列表
+      // this.findBrandByPage();
+    },
     // 编辑
     edit(item) {
-      console.log(item);
+      // console.log(item);
+      this.editBrand = item;
+      this.$refs.editBrand.openDialog();
     },
     // 删除
     del(item) {

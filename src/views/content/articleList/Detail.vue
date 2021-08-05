@@ -2,7 +2,7 @@
   <div>
     <div class="detail-main">
       <!-- 卡片 -->
-      <el-card shadow="always" style="margin: 30px;">
+      <el-card shadow="always" style="margin: 30px">
         <div slot="header">
           <span>{{ article.id ? "编辑文章" : "新增文章" }}</span>
         </div>
@@ -48,40 +48,23 @@
             />
           </el-form-item>
           <el-form-item label="封面图片">
-            <el-upload
-              ref="uploadCoverImg"
-              class="upload-demo"
-              :headers="{ token }"
-              :on-success="handleSuccess"
-              :before-upload="beforeUpload"
-              action="/lejuAdmin/material/uploadFileOss"
-            >
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">
-                只能上传图片格式文件，且不超过1.5M
-              </div>
-            </el-upload>
-            <div class="icon-wrapper">
-              <img
-                v-if="article.coverImg"
-                class="cover-img"
-                :src="article.coverImg"
-                alt=""
-              />
-              <el-popconfirm
-                title="亲,您确定要删除吗？"
-                @onConfirm="removeCoverImg"
-              >
-                <i
-                  slot="reference"
-                  class="el-icon-circle-close"
-                  v-if="article.coverImg"
-                ></i
-              ></el-popconfirm>
-            </div>
+            <upload-img :is-show-img="true" @reciveImgSrc="handleImgSrc" />
           </el-form-item>
-          <el-form-item label="文章内容">
+          <el-form-item class="changeStyle" label="切换类型">
+            <el-switch
+              v-model="isMarkDown"
+              style="display: block"
+              active-color="#13ce66"
+              inactive-color="#999"
+              active-text="富文本"
+              inactive-text="markdown"
+            />
+          </el-form-item>
+          <el-form-item v-show="isMarkDown" label="文章内容">
             <Tinymce v-model="tinContent" :height="400" />
+          </el-form-item>
+          <el-form-item v-show="!isMarkDown" label="文章内容">
+            <markdown-editor ref="markdownEditor" v-model="markdownContent" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="doSave">立即保存</el-button>
@@ -90,14 +73,15 @@
         </el-form>
       </el-card>
     </div>
-    <copyright></copyright>
+    <copyright />
   </div>
 </template>
 
 <script>
 import copyright from "@/components/copyright/index.vue";
-import { getToken } from "@/utils/auth";
+import UploadImg from "@/components/UploadImg/UploadImg.vue";
 import Tinymce from "@/components/Tinymce";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import {
   addArticle as addArticleAPI,
   productArticle as productArticleAPI,
@@ -106,10 +90,14 @@ import {
 export default {
   components: {
     Tinymce,
-    copyright
+    copyright,
+    MarkdownEditor,
+    UploadImg
   },
   data() {
     return {
+      isMarkDown: false,
+      markdownContent: "",
       article: {
         isShow: 1, // 默认值
         coverImg: ""
@@ -124,11 +112,7 @@ export default {
       }
     };
   },
-  computed: {
-    token() {
-      return getToken();
-    }
-  },
+  computed: {},
   created() {
     this.article.id = this.$route.params.id;
     if (this.article.id) {
@@ -137,11 +121,30 @@ export default {
   },
   mounted() {},
   methods: {
+    // 处理子组件传来的结果
+    handleImgSrc(e) {
+      console.log(e);
+      // 赋值
+      this.article.coverImg = e.url;
+    },
     // 执行提交
     doSave() {
       // 集成富文本内容 对富文本来说,接口的content1和content2都是转换后的html内容
-      this.article.content1 = this.tinContent;
-      this.article.content2 = this.tinContent;
+      // 判断是不是markdown类型
+      if (this.isMarkDown) {
+        // 进入不是markdown类型
+        this.article.content1 = this.tinContent;
+        this.article.content2 = this.tinContent;
+        this.article.editorType = 0;
+      } else {
+        // console.log('mdContent', this.mdContent)
+        var editor = this.$refs.markdownEditor;
+        this.article.content1 = editor.getValue();
+        this.article.content2 = editor.getHtml();
+        this.article.editorType = 1;
+        // console.log('getValue', editor.getValue())
+        // console.log('getHtml', editor.getHtml())
+      }
       this.$refs.form.validate(async valid => {
         if (valid) {
           // 需要根据情况判断是更新还是新增!!
@@ -162,67 +165,23 @@ export default {
         const { success, data, message: errMsg } = res;
         if (!success) return this.$message.error(errMsg);
         const { productArticle } = data;
+        // console.log(productArticle)
         this.article = productArticle;
         // 针对富文本手动处理
-        this.tinContent = this.article.content1;
-        this.tinContent = this.article.content2;
+        if (productArticle.editorType) {
+          // 进入是markdown类型
+          this.isMarkDown = false;
+          this.markdownContent = this.article.content1;
+          // this.markdownContent = this.article.content2
+        } else {
+          this.isMarkDown = true;
+          this.tinContent = this.article.content1;
+          this.tinContent = this.article.content2;
+        }
       });
-    },
-    // 上传成功的回调
-    handleSuccess(response, file, fileList) {
-      const { success, data, message: errMsg } = response;
-      if (success) {
-        const { fileUrl } = data;
-        this.$message.success("上传成功!");
-        // console.log(fileUrl);
-        // 赋值
-        this.article.coverImg = fileUrl;
-        // 清除上传列表
-        this.$refs.uploadCoverImg.clearFiles();
-      } else {
-        this.$message.error(errMsg);
-      }
-    },
-    // 上传类型判断
-    beforeUpload(file) {
-      // 正则表达式
-      var reg = /image\/(jpeg|png|jpg)/g;
-      const isImg = reg.test(file.type);
-      const isOver = file.size / 1024 / 1024 < 1.5;
-      if (!isImg) {
-        this.$message.error("只能上传图片格式");
-      }
-      if (!isOver) {
-        this.$message.error("上传头像图片大小不能超过1.5MB!");
-      }
-      return isImg && isOver;
-    },
-    // 删除图片
-    removeCoverImg() {
-      // 只用执行本地删除
-      this.article.coverImg = "";
     }
   }
 };
 </script>
 
-<style scoped lang="scss">
-.detail-main {
-  .icon-wrapper {
-    width: fit-content;
-    height: fit-content;
-    position: relative;
-    .cover-img {
-      width: 200px;
-    }
-    i {
-      cursor: pointer;
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      font-size: 33px;
-      color: #f00;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

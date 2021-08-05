@@ -1,118 +1,112 @@
 <template>
   <div>
-    <el-card shadow="hover" :body-style="{ padding: '0px' }">
-      <div
-        slot="header"
-        @click="isShowDec = !isShowDec"
-        style="cursor: pointer;"
-      >
-        <span>商品管理介绍</span>
-      </div>
-      <p v-show="isShowDec" style="padding:20px">
-        商品管理模块可以对客户端的商品进行增删改查等相关操作,来控制客户端商品的列表展示和商品详情
-      </p>
-    </el-card>
-
-    <el-card
-      shadow="hover"
-      :body-style="{ paddingTop: '20px', paddingBottom: '0' }"
-    >
-      <div slot="header" @click="isShow = !isShow" style="cursor: pointer;">
-        <span>条件查询</span>
-      </div>
-      <el-form
-        v-show="isShow"
-        :model="searchForm"
-        ref="ruleForm"
-        :rules="rules"
-        label-width="80px"
-        :inline="false"
-        size="normal"
-      >
-        <el-row :gutter="20">
-          <el-col :span="6" :offset="0">
-            <el-form-item label="商品名称" prop="name">
-              <el-input
-                v-model.trim="searchForm.name"
-                placeholder="请输入商品名称"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" :offset="0">
-            <el-form-item label="商品货号" prop="productSn">
-              <el-input
-                v-model.trim="searchForm.productSn"
-                placeholder="请输入商品货号"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" :offset="0">
-            <el-form-item label="品牌" prop="brandId">
-              <el-select
-                v-model="searchForm.brandId"
-                name="brandId"
-                clearable
-                placeholder="品牌"
-              >
-                <el-option
-                  v-for="item in brandList"
-                  :key="item.brandId"
-                  :label="item.brandName"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" :offset="0">
-            <el-form-item label="上架状态" prop="publishStatus">
-              <el-select
-                v-model="searchForm.publishStatus"
-                name="publishStatus"
-                clearable
-                placeholder="上架状态"
-              >
-                <el-option
-                  v-for="(item, index) in publishStatusList"
-                  :key="index"
-                  :label="item.lable"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6" :offset="0">
-            <el-form-item label="审核状态" prop="verifyStatus">
-              <el-select
-                v-model="searchForm.verifyStatus"
-                name="verifyStatus"
-                clearable
-                placeholder="审核状态"
-              >
-                <el-option
-                  v-for="(item, index) in verifyStatusList"
-                  :key="index"
-                  :label="item.lable"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" :offset="12">
-            <el-form-item>
-              <el-button type="primary" @click="onSearch('ruleForm')"
-                >查询</el-button
-              >
-              <el-button @click="onCancle('ruleForm')">取消</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </el-card>
+    <el-collapse v-model="activeName" accordion>
+      <el-collapse-item title="商品管理介绍" name="1">
+        <el-card shadow="hover" :body-style="{ padding: '0px' }">
+          <p style="padding:20px">
+            商品管理模块可以对客户端的商品进行增删改查等相关操作,来控制客户端商品的列表展示和商品详情
+          </p>
+        </el-card>
+      </el-collapse-item>
+      <el-collapse-item title="条件查询" name="2">
+        <el-card
+          shadow="hover"
+          :body-style="{ paddingTop: '20px', paddingBottom: '0' }"
+        >
+          <div slot="header" style="cursor: pointer;"></div>
+          <el-form
+            :model="searchForm"
+            ref="ruleForm"
+            label-width="80px"
+            :inline="false"
+            size="normal"
+          >
+            <el-row :gutter="20">
+              <el-col :span="6" :offset="0">
+                <el-form-item label="商品名称" prop="name">
+                  <el-input
+                    v-model.trim="searchForm.name"
+                    placeholder="请输入商品名称"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="0">
+                <el-form-item label="商品货号" prop="productSn">
+                  <el-input
+                    v-model.trim="searchForm.productSn"
+                    placeholder="请输入商品货号"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="0">
+                <el-form-item label="品牌" prop="brandId">
+                  <el-select
+                    v-model="searchForm.brandId"
+                    name="brandId"
+                    clearable
+                    placeholder="品牌"
+                  >
+                    <el-option
+                      v-for="item in brandList"
+                      :key="item.brandId"
+                      :label="item.brandName"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="0">
+                <el-form-item label="上架状态" prop="publishStatus">
+                  <el-select
+                    v-model="searchForm.publishStatus"
+                    name="publishStatus"
+                    clearable
+                    placeholder="上架状态"
+                  >
+                    <el-option
+                      v-for="(item, index) in publishStatusList"
+                      :key="index"
+                      :label="item.lable"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="6" :offset="0">
+                <el-form-item label="审核状态" prop="verifyStatus">
+                  <el-select
+                    v-model="searchForm.verifyStatus"
+                    name="verifyStatus"
+                    clearable
+                    placeholder="审核状态"
+                  >
+                    <el-option
+                      v-for="(item, index) in verifyStatusList"
+                      :key="index"
+                      :label="item.lable"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="12">
+                <el-form-item>
+                  <el-button type="primary" @click="onSearch('ruleForm')"
+                    >查询</el-button
+                  >
+                  <el-button @click="onCancle('ruleForm')">取消</el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </el-card>
+      </el-collapse-item>
+    </el-collapse>
 
     <el-card>
       <el-table
@@ -314,6 +308,7 @@ import {
   switchVerifyStatus,
   updateProductAndSkus
 } from "@/api/products/index";
+import { findAllBrand } from "@/api/brand/index";
 export default {
   name: "goodsList",
 
@@ -321,11 +316,8 @@ export default {
 
   data() {
     return {
+      activeName: 1,
       loading: false,
-      //是否显示条件介绍卡片
-      isShowDec: false,
-      //是否显示条件查询卡片
-      isShow: false,
       list: [],
       pageInfo: {
         start: 1,
@@ -342,38 +334,7 @@ export default {
         { id: 1, lable: "已上架", value: "1" }
       ],
       // 搜索部分选择的品牌列表
-      brandList: [
-        {
-          brandId: "1329320162080423937",
-          brandName: "东易日盛家居装饰",
-          value: "1329320162080423937"
-        },
-        {
-          brandId: "1328952247757930497",
-          brandName: "侑家良品",
-          value: "1328952247757930497"
-        },
-        {
-          brandId: "1328880034681815042",
-          brandName: "简野 (JIANYE)",
-          value: "1328880034681815042"
-        },
-        {
-          brandId: "1328964991345328130",
-          brandName: "家乐名品 (JLVP)",
-          value: "1328964991345328130"
-        },
-        {
-          brandId: "1328990701308968962",
-          brandName: "雷士照明",
-          value: "1328990701308968962"
-        },
-        {
-          brandId: "1328988221644832769",
-          brandName: "东易日盛",
-          value:'1328988221644832769'
-        }
-      ],
+      brandList: [],
       searchForm: {
         name: "",
         brandId: "",
@@ -381,22 +342,22 @@ export default {
         publishStatus: "",
         verifyStatus: ""
       },
-      rules: {
-        name: [
-          // {required: true, message: "请输入作者姓名", trigger: "blur" },
-          { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" }
-        ],
-        productSn: [
-          // { required: true, message: "请选择请输入标题", trigger: "change" },
-          { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" }
-        ]
-      },
       total: 0
     };
   },
 
   async mounted() {
     this.productsByPage();
+    const { success, data, message } = await findAllBrand();
+    if (!success) return this.$message.error(message);
+    // console.log(data);
+    this.brandList = data.items.map(el => {
+      return {
+        brandId: el.id,
+        brandName: el.name,
+        value: el.id
+      };
+    });
   },
 
   methods: {
@@ -418,24 +379,19 @@ export default {
       this.productsByPage();
     },
     // 条件查询确定按钮
-    onSearch(formName) {
-      console.log(this.searchForm);
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          const { name, productSn } = this.searchForm;
-          if (!name && !productSn) {
-            this.$message.warning("请至少输入一项进行查询");
-          } else {
-            this.productsByPage();
-            // 重置分页数据
-            this.pageInfo.start = 1;
-            this.pageInfo.limit = 10;
-          }
-        } else {
-          console.log("error submit!!");
-          return false;
+    onSearch() {
+      let isAllEmpty = true;
+      for (let key in this.searchForm) {
+        if (this.searchForm[key]) {
+          isAllEmpty = false;
         }
-      });
+      }
+      if (isAllEmpty) return this.$message.warning("请至少输入一项进行查询");
+      // console.log("是否进入");
+      this.productsByPage();
+      // 重置分页数据
+      this.pageInfo.start = 1;
+      this.pageInfo.limit = 10;
     },
     //图片加载错误回调
     handleError(val) {

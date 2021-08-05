@@ -1,5 +1,13 @@
 <template>
   <div>
+    <detail
+      ref="editRoles"
+      :logo="editRoles.logo"
+      :bigImg="editRoles.bigPic"
+      :editRoles="editRoles"
+      @refrush="getBrandList"
+      :key="key"
+    />
     <el-card
       style="width:95%;margin:10px auto"
       shadow="hover"
@@ -49,6 +57,9 @@
     </el-card>
 
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" icon="el-icon-plus" @click="add"
+        >新增</el-button
+      >
       <el-table v-loading="loading" fit border :data="list" style="width: 100%">
         <el-table-column
           align="center"
@@ -104,9 +115,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button slot="reference" type="danger" size="mini"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -127,6 +143,7 @@
   </div>
 </template>
 <script>
+import Detail from "./Detail.vue";
 import copyright from "@/components/copyright/index.vue";
 import {
   getInitMenus,
@@ -139,10 +156,15 @@ import {
 export default {
   name: "Account",
 
-  components: { copyright },
-
+  components: { copyright, Detail },
+  computed: {
+    key() {
+      return new Date().getTime();
+    }
+  },
   data() {
     return {
+      editRoles: {},
       loading: false,
       isShow: false,
       list: [],
@@ -173,13 +195,46 @@ export default {
   },
 
   methods: {
+    // 新增
+    add() {
+      //清空编辑的信息
+      this.editRoles = {};
+      // console.log(this.$refs.editRoles)
+      this.$refs.editRoles.clearAll();
+      this.$refs.editRoles.openDialog();
+    },
+    // 点击确认按钮刷新列表
+    async getBrandList(e) {
+      // console.log(e);
+      // console.log("执行刷新");
+      // 有id 表示编辑否则添加
+      let api = e.id ? updateUserRoles : saveUserRoles;
+
+      const { success, message } = await api(e);
+      if (!success) return this.$message.error(message);
+      this.$message.success("保存成功");
+      //刷新列表
+      this.findUsersByPage();
+    },
     // 编辑
-    edit(item) {
-      console.log(item);
+    async edit(item) {
+      // console.log(item);
+      item.nickName = item.nick_name;
+      const { success, data, message } = await user(item.id);
+      if (!success) return this.$message.error(message);
+      item.roleIds = data.user.roleIds;
+      //下拉框数据回显
+      this.editRoles = item;
+      this.$refs.editRoles.openDialog();
+      this.$refs.editRoles.showSelectVal();
     },
     // 删除
-    del(item) {
-      console.log(item);
+    async del(item) {
+      // console.log(item);
+      const { success, message } = await removeUser(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      this.findUsersByPage();
     },
     async findUsersByPage(data) {
       this.loading = true;
