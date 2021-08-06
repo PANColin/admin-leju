@@ -200,6 +200,7 @@ export default {
       //清空编辑的信息
       this.editRoles = {};
       // console.log(this.$refs.editRoles)
+      //清除缓存（只清空editRoles不起作用）
       this.$refs.editRoles.clearAll();
       this.$refs.editRoles.openDialog();
     },

@@ -180,8 +180,9 @@
               inactive-color="#999"
               active-text="最新"
               inactive-text="过时"
-              active-value="1"
+              :active-value="1"
               :inactive-value="0"
+              @change="newStatusChange($event, scope.row)"
             />
             <el-switch
               v-model="scope.row.recommendStatus"
@@ -191,6 +192,7 @@
               inactive-text="不推荐"
               :active-value="1"
               :inactive-value="0"
+              @change="recommendStatusChange($event, scope.row)"
             />
             <el-switch
               v-model="scope.row.publishStatus"
@@ -200,6 +202,7 @@
               inactive-text="未发布"
               :active-value="1"
               :inactive-value="0"
+              @change="publishStatusChange($event, scope.row)"
             />
             <el-switch
               v-model="scope.row.verifyStatus"
@@ -209,6 +212,7 @@
               inactive-text="未审核"
               :active-value="1"
               :inactive-value="0"
+              @change="verifyStatusChange($event, scope.row)"
             />
           </template>
         </el-table-column>
@@ -361,9 +365,44 @@ export default {
   },
 
   methods: {
+    //是否最新状态改变
+    async newStatusChange(e, item) {
+      console.log(e, item);
+      const params = { productId: item.id, status: e };
+      const { success, message } = await switchNewStatus(params);
+      if (!success) return this.$message.error(message);
+      this.$message.success("修改状态成功");
+    },
+    //是否推荐状态改变
+    async recommendStatusChange(e, item) {
+      console.log(e, item);
+      const params = { productId: item.id, status: e };
+      const { success, message } = await switchRecommandStatus(params);
+      if (!success) return this.$message.error(message);
+      this.$message.success("修改状态成功");
+    },
+    //是否发布状态改变
+    async publishStatusChange(e, item) {
+      console.log(e, item);
+      const params = { productId: item.id, status: e };
+      const { success, message } = await switchPublishStatus(params);
+      if (!success) return this.$message.error(message);
+      this.$message.success("修改状态成功");
+    },
+    //是否审核状态改变
+    async verifyStatusChange(e, item) {
+      console.log(e, item);
+      const params = { productId: item.id, status: e };
+      const { success, message } = await switchVerifyStatus(params);
+      if (!success) return this.$message.error(message);
+      this.$message.success("修改状态成功");
+    },
     // 编辑sku
-    editSku(id) {
+    async editSku(id) {
       console.log("skuId", id);
+      const { success, data, message } = await productSkusDetail(id);
+      if (!success) return this.$message.error(message);
+      console.log(data);
     },
     // 编辑
     edit(item) {

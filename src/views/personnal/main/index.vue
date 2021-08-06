@@ -141,65 +141,65 @@
 </template>
 
 <script>
-import { getUserInfo } from '@/utils/auth'
-import copyright from '@/components/copyright/index.vue'
-import { findArticles as findArticlesAPI } from '@/api/productArticle/index'
+import { getUserInfo } from "@/utils/auth";
+import copyright from "@/components/copyright/index.vue";
+import { findArticles as findArticlesAPI } from "@/api/productArticle/index";
 export default {
-  name: 'Main',
+  name: "Main",
   components: { copyright },
   data() {
     return {
-      activeName: 'article',
-      dynamicTags: ['学霸', '无敌', '宇宙第一帅'],
+      activeName: "article",
+      dynamicTags: ["学霸", "无敌", "宇宙第一帅"],
       inputVisible: false,
-      inputValue: '',
+      inputValue: "",
       list: [],
       pageInfo: {
         start: 1,
         limit: 10
       },
       totalPage: 0
-    }
+    };
   },
   computed: {
     userInfo() {
-      return getUserInfo()
+      return getUserInfo();
     }
   },
   created() {
-    this.findArticles()
+    this.findArticles();
   },
   methods: {
     // 编辑
     edit(id) {
-      console.log(id)
-      this.$router.push({ name: 'articleListEdit', params: { id } })
+      console.log(id);
+      this.$router.push({ name: "articleListEdit", params: { id } });
     },
     changeEvent(e) {
       // console.log(e)
       // 当e大于数组长度是再一次发送请求
       if (e == this.list.length - 1) {
-        this.pageInfo.start++
-        if (this.totalPage >= this.pageInfo.start) {
+        if (this.totalPage > this.pageInfo.start) {
+          this.pageInfo.start++;
           // console.log(this.totalPage, '==================', this.pageInfo.start)
-          this.findArticles()
+          this.findArticles();
         } else {
-          this.$message.warning('没有更多数据了')
+          this.$message.warning("没有更多数据了");
         }
       }
     },
     async findArticles() {
-      this.loading = true
+      this.loading = true;
       const res = await findArticlesAPI(
         this.pageInfo.start,
         this.pageInfo.limit
-      )
+      );
       // console.log(res)
-      if (!res.success) return this.$message.error(res.message)
-      this.totalPage = Math.ceil(res.data.total / this.pageInfo.limit)
-      this.loading = false
-      this.total = res.data.total
-      this.list = [...this.list, ...res.data.rows]
+      if (!res.success) return this.$message.error(res.message);
+      this.totalPage = Math.ceil(res.data.total / this.pageInfo.limit);
+      this.loading = false;
+      this.total = res.data.total;
+      this.list = [...this.list, ...res.data.rows];
     },
     // tabs点击事件
     handleClick(tab, event) {
@@ -207,28 +207,28 @@ export default {
     },
     // tag标签关闭事件
     handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
     },
     //新增tag展示input输入框
     showInput() {
-      this.inputVisible = true
-      this.$nextTick((_) => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
     },
 
     handleInputConfirm() {
-      let inputValue = this.inputValue
+      let inputValue = this.inputValue;
       if (inputValue) {
-        this.dynamicTags.push(inputValue)
+        this.dynamicTags.push(inputValue);
       }
-      this.inputVisible = false
-      this.inputValue = ''
+      this.inputVisible = false;
+      this.inputValue = "";
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import './index.scss';
+@import "./index.scss";
 </style>

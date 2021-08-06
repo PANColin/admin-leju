@@ -1,10 +1,10 @@
 <template>
   <div>
     <detail
-      ref="editBrand"
-      :logo="editBrand.logo"
-      :bigImg="editBrand.bigPic"
-      :editBrand="editBrand"
+      ref="editRoles"
+      :logo="editRoles.logo"
+      :bigImg="editRoles.bigPic"
+      :editRoles="editRoles"
       @refrush="getBrandList"
     />
     <el-card style="width:95%;margin: 20px auto;">
@@ -38,16 +38,13 @@
           label="角色编码"
           width="100"
         />
-        <el-table-column align="center" label="头像">
-          <template slot-scope="scope">
-            <img
-              :src="scope.row.icon"
-              width="100"
-              height="110"
-              @error="handleError(scope.row)"
-            />
-          </template>
-        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="remark"
+          label="备注"
+          show-overflow-tooltip
+          width="300"
+        />
 
         <el-table-column
           align="center"
@@ -66,9 +63,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button slot="reference" type="danger" size="mini"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -106,7 +108,7 @@ export default {
 
   data() {
     return {
-      editBrand:{},
+      editRoles: {},
       loading: false,
       list: [],
       pageInfo: {
@@ -125,32 +127,42 @@ export default {
     // 新增
     add() {
       //清空编辑的信息
-      this.editBrand = {};
-      // console.log(this.$refs.editBrand)
-      this.$refs.editBrand.openDialog();
+      this.editRoles = {};
+      // console.log(this.$refs.editRoles)
+      this.$refs.editRoles.clearAll();
+      this.$refs.editRoles.openDialog();
     },
     // 点击确认按钮刷新列表
     async getBrandList(e) {
       // console.log(e);
       // console.log("执行刷新");
       //有id 表示编辑否则添加
-      // let api = e.id ? updateBrand : addBrand;
+      let api = e.id ? updateRolePermissions : saveRolePermissions;
 
-      // const { success, message } = await api(e);
-      // if (!success) return this.$message.error(message);
+      const { success, message } = await api(e);
+      if (!success) return this.$message.error(message);
       this.$message.success("保存成功");
       //刷新列表
-      // this.findBrandByPage();
+      //  this.findRolesByPage();
+      this.$router.go(0); //强制刷新，避免子组件不刷新的问题
     },
     // 编辑
-    edit(item) {
+    async edit(item) {
       // console.log(item);
-      this.editBrand = item;
-      this.$refs.editBrand.openDialog();
+      const { success, data, message } = await findRolePermissions(item.id);
+      if (!success) return this.$message.error(message);
+      // console.log(data);
+      item.permissionIds = data.role.permissionIds;
+      this.editRoles = item;
+      this.$refs.editRoles.openDialog();
     },
     // 删除
-    del(item) {
-      console.log(item);
+    async del(item) {
+      // console.log(item);
+      const { success, message } = await removeRole(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      this.findRolesByPage();
     },
     async findRolesByPage() {
       this.loading = true;
@@ -163,19 +175,6 @@ export default {
       this.loading = false;
       this.total = res.data.total;
       this.list = res.data.rows;
-      res.data.rows.forEach(el => {
-        // console.log(el)
-        el.icon ||=
-          "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
-      });
-    },
-
-    //图片加载错误回调
-    handleError(val) {
-      // console.log(val)
-      // console.log('error')
-      val.icon =
-        "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
     },
     // 当前每页显示的条数变化的时候触发
     SizeChange(newsize) {
