@@ -7,6 +7,7 @@
       :headers="{ token }"
       :on-success="handleSuccess"
       :before-upload="beforeUpload"
+      :show-file-list="false"
       :action="uploadUrl"
     >
       <el-button v-if="listType == 'text'" size="small" type="primary"

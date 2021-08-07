@@ -15,7 +15,7 @@ function save(data) {
   })
 }
 // 设置收货默认 header:token data:map
-function setReceiveOne() {
+function setReceiveOne(data) {
   return request({
     url: `/lejuAdmin/companyAddress/setReceiveOne`,
     method: 'post',
@@ -23,7 +23,7 @@ function setReceiveOne() {
   })
 }
 // 设置发货默认 header:token data:map 默认发货地址：0->否；1->是
-function setSendOne() {
+function setSendOne(data) {
   return request({
     url: `/lejuAdmin/companyAddress/setSendOne`,
     method: 'post',
@@ -31,7 +31,7 @@ function setSendOne() {
   })
 }
 // 更新收货地址 header:token data:address对象
-function update() {
+function update(data) {
   return request({
     url: `/lejuAdmin/companyAddress/update`,
     method: 'post',

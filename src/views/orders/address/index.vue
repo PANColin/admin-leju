@@ -1,6 +1,10 @@
 <template>
   <div>
+    <detail ref="editAddress" :editAddress="editAddress" @refrush="getList" />
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" icon="el-icon-plus" @click="add"
+        >新增</el-button
+      >
       <el-table v-loading="loading" fit border :data="list" style="width: 100%">
         <el-table-column
           align="center"
@@ -13,11 +17,13 @@
           align="center"
           prop="addressName"
           label="地址名称"
-          width="160"
+          width="180"
+          show-overflow-tooltip
         />
         <el-table-column align="center" label="默认发货地址" width="180">
           <template slot-scope="scope">
             <el-switch
+              @change="changeSendDefault($event, scope.row)"
               v-model="scope.row.sendStatus"
               active-color="#13ce66"
               inactive-color="#999"
@@ -64,6 +70,7 @@
         <el-table-column align="center" label="默认收货地址" width="180">
           <template slot-scope="scope">
             <el-switch
+              @change="changeReciveDefault($event, scope.row)"
               v-model="scope.row.receiveStatus"
               active-color="#13ce66"
               inactive-color="#999"
@@ -97,9 +104,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button slot="reference" type="danger" size="mini"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -109,6 +121,7 @@
 </template>
 <script>
 import copyright from "@/components/copyright/index.vue";
+import Detail from "./Detail.vue";
 import {
   addressList as addressListAPI,
   save,
@@ -121,10 +134,11 @@ import {
 export default {
   name: "Address",
 
-  components: { copyright },
+  components: { copyright, Detail },
 
   data() {
     return {
+      editAddress: {},
       loading: false,
       list: []
     };
@@ -135,20 +149,56 @@ export default {
   },
 
   methods: {
+    async changeSendDefault(e, item) {
+      const { success, message } = await setSendOne({ id: item.id, status: e });
+      if (!success) return this.$message.error(message);
+      //重新获取列表
+      this.addressList();
+      this.$message.success("切换状态成功");
+      // console.log(e, item);
+    },
+    async changeReciveDefault(e, item) {
+      const { success, message } = await setReceiveOne({
+        id: item.id,
+        status: e
+      });
+      if (!success) return this.$message.error(message);
+      //重新获取列表
+      this.addressList();
+      this.$message.success("切换状态成功");
+      // console.log(e, item);
+    },
+    // 新增
+    add() {
+      this.editAddress = {};
+      this.$refs.editAddress.openDialog();
+    },
+    // 点击确认按钮刷新列表
+    async getList(e) {
+      console.log(e);
+      // console.log("执行刷新");
+      // 有id 表示编辑否则添加
+      let api = e.id ? update : save;
+
+      const { success, message } = await api(e);
+      if (!success) return this.$message.error(message);
+      this.$message.success("保存成功");
+      //刷新列表
+      this.addressList();
+    },
     // 编辑
-    edit(item) {
-      console.log(item);
+    async edit(item) {
+      //下拉框数据回显
+      this.editAddress = item;
+      this.$refs.editAddress.openDialog();
     },
     // 删除
-    del(item) {
-      console.log(item);
-    },
-    //图片加载错误回调
-    handleError(val) {
-      // console.log(val)
-      // console.log('error')
-      val.icon =
-        "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
+    async del(item) {
+      // console.log(item);
+      const { success, message } = await deleteAddress(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      this.addressList();
     },
     async addressList() {
       this.loading = true;
@@ -157,11 +207,6 @@ export default {
       if (!res.success) return this.$message.error(res.message);
       this.loading = false;
       this.list = res.data.items;
-      res.data.items.forEach(el => {
-        // console.log(el)
-        el.icon ||=
-          "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
-      });
     }
   }
 };

@@ -36,6 +36,7 @@
               inactive-text="不展示"
               :active-value="1"
               :inactive-value="0"
+              @change="showStatusChange($event, scope.row)"
             />
           </template>
         </el-table-column>
@@ -165,12 +166,22 @@ export default {
   },
 
   methods: {
+    //是否展示
+    async showStatusChange(e, item) {
+      console.log(e, item);
+      const { success, message } = await switchShowStatus({
+        id: item.id,
+        status: e
+      });
+      if (!success) return this.$message.error(message);
+      this.$message.success("状态改变成功");
+    },
     // 新增
     add() {
       //清空编辑的信息
       this.editBrand = {};
       // console.log(this.$refs.editBrand)
-      this.$refs.editBrand.clearAll();
+      // this.$refs.editBrand.clearAll();
       this.$refs.editBrand.openDialog();
     },
     // 点击确认按钮刷新列表

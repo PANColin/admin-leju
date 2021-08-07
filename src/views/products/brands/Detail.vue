@@ -227,9 +227,12 @@ export default {
         this.addBrandForm.logo = e.url;
       }
     },
-    clearAll() {
-      this.addBrandForm = {};
-    },
+    // clearAll() {
+    //   this.addBrandForm = {
+    //     logo: "",
+    //     bigPic: ""
+    //   };
+    // },
     // 弹窗关闭的时候触发
     handleClose() {
       this.dialogVisible = false;
@@ -253,8 +256,14 @@ export default {
     openDialog() {
       this.$nextTick(() => {
         if (this.editBrand.id) {
-          // console.log("==================");
-          this.addBrandForm = this.editBrand;
+          // this.addBrandForm = this.editBrand;
+          // 深拷贝防止双向绑定页面表单会随着修改表单而变化
+          this.addBrandForm = JSON.parse(JSON.stringify(this.editBrand));
+        } else {
+          this.addBrandForm = {
+            logo: "",
+            bigPic: ""
+          };
         }
       });
       this.dialogVisible = true;

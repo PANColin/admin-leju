@@ -269,7 +269,9 @@ roleName (string, optional): 角色名称 */
       this.checkedKeys = [];
       this.$nextTick(() => {
         if (this.editRoles.id) {
-          this.addRoleForm = this.editRoles;
+          // this.addRoleForm = this.editRoles;
+            // 深拷贝防止双向绑定页面表单会随着修改表单而变化
+          this.addRoleForm = JSON.parse(JSON.stringify(this.editRoles));
           // console.log(this.menu);
           this.editRoles.permissionIds?.forEach(item => {
             this.checked(item, this.menu);

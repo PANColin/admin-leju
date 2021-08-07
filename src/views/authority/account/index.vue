@@ -200,7 +200,7 @@ export default {
       //清空编辑的信息
       this.editRoles = {};
       // console.log(this.$refs.editRoles)
-      //清除缓存（只清空editRoles不起作用）
+      //清除缓存（只清空editRoles不起作用,子组件通过id进行判断了，可以改写，但是为了逻辑这样写看的更清晰一点）
       this.$refs.editRoles.clearAll();
       this.$refs.editRoles.openDialog();
     },

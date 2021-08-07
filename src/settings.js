@@ -13,5 +13,6 @@ module.exports = {
    * @description Whether show the logo in sidebar
    */
   sidebarLogo: false,
-  serveHost: ' http://leju.bufan.cloud'
+  // serveHost: 'http://leju.bufan.cloud',
+  serveHost: 'http://localhost',
 }
