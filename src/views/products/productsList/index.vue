@@ -1,5 +1,6 @@
 <template>
   <div>
+    <sku-detail ref="sku" :editSku="skuList" @reload="reloadSku"></sku-detail>
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item title="商品管理介绍" name="1">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
@@ -266,12 +267,7 @@
           width="100"
         />
         <el-table-column align="center" prop="sort" label="排序" width="100" />
-        <el-table-column
-          label="操作"
-          width="160px"
-          align="center"
-          fixed="right"
-        >
+        <el-table-column label="操作" width="180" align="center" fixed="right">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
@@ -299,6 +295,7 @@
   </div>
 </template>
 <script>
+import skuDetail from "./sku/index.vue";
 import copyright from "@/components/copyright/index.vue";
 import {
   addProductAndSkus,
@@ -316,10 +313,11 @@ import { findAllBrand } from "@/api/brand/index";
 export default {
   name: "goodsList",
 
-  components: { copyright },
+  components: { copyright, skuDetail },
 
   data() {
     return {
+      id: "", //商品id
       activeName: 1,
       loading: false,
       list: [],
@@ -339,6 +337,7 @@ export default {
       ],
       // 搜索部分选择的品牌列表
       brandList: [],
+      skuList: [],
       searchForm: {
         name: "",
         brandId: "",
@@ -397,11 +396,25 @@ export default {
       if (!success) return this.$message.error(message);
       this.$message.success("修改状态成功");
     },
+    reloadSku(e) {
+      console.log(e);
+      if (e) {
+        this.editSku(this.id);
+      }
+    },
     // 编辑sku
     async editSku(id) {
       console.log("skuId", id);
+      this.id = id;
       const { success, data, message } = await productSkusDetail(id);
       if (!success) return this.$message.error(message);
+      // console.log(data);
+      data.skus.forEach(el => {
+        el.spData = JSON.parse(el.spData);
+      });
+      console.log(data.skus);
+      this.skuList = data.skus;
+      this.$refs.sku.openDialog(data.product.id);
       console.log(data);
     },
     // 编辑

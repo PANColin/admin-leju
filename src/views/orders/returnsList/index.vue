@@ -260,6 +260,7 @@ export default {
     //查看订单
     checkOrder(item) {
       console.log(item);
+      this.$router.push({ name: "orderReturnDetail", params: { id: item.id } });
     },
     // 条件查询取消按钮
     onCancle(formName) {

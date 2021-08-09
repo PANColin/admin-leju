@@ -306,6 +306,7 @@ export default {
     //查看订单
     checkOrder(item) {
       console.log(item);
+      this.$router.push({ name: "orderDetail", params: { id: item.id } });
     },
     // 条件查询取消按钮
     onCancle(formName) {
@@ -349,13 +350,13 @@ export default {
     SizeChange(newsize) {
       // console.log("size",newsize);
       this.pageInfo.limit = newsize;
-      this.productsByPage();
+      this.findOrdersByPage();
     },
     // 当前页码发生变化的时候触发
     CurrentChange(newcurrent) {
       // console.log("current",newcurrent);
       this.pageInfo.start = newcurrent;
-      this.productsByPage();
+      this.findOrdersByPage();
     }
   }
 };

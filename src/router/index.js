@@ -102,16 +102,38 @@ export const constantRoutes = [
         meta: { title: '地址管理', icon: 'el-icon-place' }
       },
       {
-        path: 'ordersList',
+        path: 'order/ordersList',
         name: 'ordersList',
         component: () => import('@/views/orders/ordersList/index'),
         meta: { title: '订单列表', icon: 'el-icon-s-order' }
       },
       {
-        path: 'returnsList',
+        path: 'order/returnsList',
         name: 'returnsList',
         component: () => import('@/views/orders/returnsList/index'),
         meta: { title: '退单列表', icon: 'el-icon-s-release' }
+      },
+      {
+        path: 'order/detail/:id',
+        name: 'orderDetail',
+        component: () => import('@/views/orders/ordersList/detail/index'),
+        hidden: true,
+        meta: {
+          title: '订单详情',
+          icon: 'el-icon-s-release',
+          activeMenu: '/orders/order/ordersList'
+        }
+      },
+      {
+        path: 'order/returnDetail/:id',
+        name: 'orderReturnDetail',
+        component: () => import('@/views/orders/returnsList/detail/index'),
+        hidden: true,
+        meta: {
+          title: '退单详情',
+          icon: 'el-icon-s-release',
+          activeMenu: '/orders/order/returnsList'
+        }
       }
     ]
   },

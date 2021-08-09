@@ -12,8 +12,7 @@ function findOrdersByPage(start, limit, data) {
 function finishOrder(orderId) {
   return request({
     url: `/lejuAdmin/order/finishOrder/${orderId}`,
-    method: 'post',
-    data
+    method: 'post'
   })
 }
 // 查询订单明细 header:token data:map
