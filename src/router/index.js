@@ -75,6 +75,31 @@ export const constantRoutes = [
         meta: { title: '商品列表', icon: 'el-icon-s-goods' }
       },
       {
+        path: 'productsList/addProduct',
+        name: 'productsListAdd',
+        component: () =>
+          import('@/views/products/productsList/productDetail/index'),
+        hidden: true,
+        meta: {
+          title: '新增商品',
+          icon: 'el-icon-s-goods',
+          activeMenu: '/products/productsList'
+        }
+      },
+      {
+        path: 'productsList/editProduct/:id',
+        name: 'productsListEdit',
+        component: () =>
+          import('@/views/products/productsList/productDetail/index'),
+        hidden: true,
+        meta: {
+          title: '编辑商品',
+          icon: 'el-icon-s-goods',
+          activeMenu: '/products/productsList',
+          isEdit: true
+        }
+      },
+      {
         path: 'productsCategry',
         name: 'productsCategry',
         component: () => import('@/views/products/productsCategry/index'),

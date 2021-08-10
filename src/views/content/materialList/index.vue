@@ -2,6 +2,7 @@
   <div>
     <div class="box">
       <upload-img
+        :isFlex="false"
         upload-url="/lejuAdmin/material/uploadFileOssSave"
         @reciveImgSrc="handleImgSrc"
       />
@@ -14,7 +15,7 @@
           height="500px"
         >
           <el-carousel-item v-for="item in list" :key="item.id" class="item">
-            <img :src="item.ossUrl" alt="">
+            <img :src="item.ossUrl" alt="" />
             <p>创建时间:{{ item.createTime }}</p>
             <el-popconfirm
               title="亲,您确定要删除吗？"
@@ -25,7 +26,8 @@
                 type="danger"
                 size="default"
                 icon="el-icon-delete"
-              >删除</el-button>
+                >删除</el-button
+              >
             </el-popconfirm>
           </el-carousel-item>
         </el-carousel>
@@ -53,10 +55,10 @@ import {
   uploadFileOss,
   uploadFileOssSave,
   delMaterial
-} from '@/api/material/index'
-import copyright from '@/components/copyright/index.vue'
+} from "@/api/material/index";
+import copyright from "@/components/copyright/index.vue";
 export default {
-  name: 'MaterialList',
+  name: "MaterialList",
   components: { copyright, UploadImg },
   data() {
     return {
@@ -66,54 +68,54 @@ export default {
         limit: 10
       },
       total: 0
-    }
+    };
   },
   created() {
-    this.findMaterialByPage()
+    this.findMaterialByPage();
   },
   methods: {
     // 处理子组件传来的结果
     handleImgSrc(e) {
       // console.log(e)
-      this.findMaterialByPage()
+      this.findMaterialByPage();
     },
     // 删除素材
     async delMaterial(id) {
       // console.log(id)
-      const { success, message } = await delMaterial(id)
-      if (!success) return this.$message.error(message)
-      this.$message.success('删除成功')
-      this.findMaterialByPage()
+      const { success, message } = await delMaterial(id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      this.findMaterialByPage();
     },
     async findMaterialByPage() {
       const res = await findMaterialByPageAPI(
         this.pageInfo.start,
         this.pageInfo.limit
-      )
+      );
       // console.log(res)
-      if (!res.success) return this.$message.error(res.message)
-      this.total = res.data.total
-      this.list = res.data.rows
+      if (!res.success) return this.$message.error(res.message);
+      this.total = res.data.total;
+      this.list = res.data.rows;
       res.data.rows.forEach(el => {
         // console.log(el)
         el.icon ||=
-          'https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg'
-      })
+          "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
+      });
     },
     // 当前每页显示的条数变化的时候触发
     SizeChange(newsize) {
       // console.log("size",newsize);
-      this.pageInfo.limit = newsize
-      this.findMaterialByPage()
+      this.pageInfo.limit = newsize;
+      this.findMaterialByPage();
     },
     // 当前页码发生变化的时候触发
     CurrentChange(newcurrent) {
       // console.log("current",newcurrent);
-      this.pageInfo.start = newcurrent
-      this.findMaterialByPage()
+      this.pageInfo.start = newcurrent;
+      this.findMaterialByPage();
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

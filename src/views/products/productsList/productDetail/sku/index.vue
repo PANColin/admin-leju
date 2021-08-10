@@ -7,7 +7,7 @@
     >
       <el-button type="primary" size="default" @click="addSku">新增</el-button>
 
-      <el-table :data="editSku" border stripe>
+      <el-table :data="addSkuList" border stripe>
         <el-table-column
           type="index"
           label="序号"
@@ -112,33 +112,7 @@
         </el-table-column>
         <el-table-column label="操作" width="160" align="center" fixed="right">
           <template slot-scope="scope">
-            <div v-if="scope.row.id">
-              <el-button
-                type="text"
-                size="default"
-                @click="editSkuFun(scope.row)"
-                >修改编辑</el-button
-              >
-              <el-popconfirm
-                title="亲,您确定要删除吗？"
-                @onConfirm="delSku(scope.row)"
-              >
-                <el-button
-                  style="color:#f00"
-                  type="text"
-                  size="default"
-                  slot="reference"
-                  >删除</el-button
-                >
-              </el-popconfirm>
-            </div>
-            <div v-else>
-              <el-button
-                type="text"
-                size="default"
-                @click="saveSkuFun(scope.row)"
-                >保存</el-button
-              >
+            <div>
               <el-popconfirm
                 title="亲,您确定要删除吗？"
                 @onConfirm="delSkuLocle(scope.$index, scope.row)"
@@ -157,6 +131,14 @@
       </el-table>
 
       <div slot="footer" class="dialog-footer">
+        <el-button
+          v-if="addSkuList.length > 0"
+          type="primary"
+          size="default"
+          @click="getskuList"
+          >获取skuList</el-button
+        >
+
         <el-button @click="handleClose">取 消</el-button>
       </div>
     </el-dialog>
@@ -164,17 +146,11 @@
 </template>
 
 <script>
-import {
-  addProductSkus,
-  delSku,
-  getSkusByProductId,
-  updateSkuInfo
-} from "@/api/sku/index";
 import UploadImg from "@/components/UploadImg/UploadImg.vue";
 export default {
   components: { UploadImg },
   props: {
-    editSku: {
+    addSkuList: {
       type: Array,
       default() {
         return [];
@@ -186,36 +162,50 @@ export default {
   mounted() {},
   data() {
     return {
-      productId: "",
-      rules: {},
+      // addSkuList: [],
       dialogVisible: false // 用于控制弹窗是否打开
     };
   },
   methods: {
-    //保存
-    async saveSkuFun(item) {
-      // console.log(item);
-      // spData (string, optional): 商品销售属性，json格式String类型 ,
-      item.spData = JSON.stringify(item.spData);
-      const { success, message } = await addProductSkus(item);
-      if (!success) return this.$message.error(message);
-      this.$message.success("保存成功");
-      this.$emit("reload", success);
-    },
     // 删除，不请求数据
     delSkuLocle(index, item) {
       // console.log(index, item);
-      this.editSku.splice(index, 1);
+      this.addSkuList.splice(index, 1);
+    },
+    // 获取skuList
+    getskuList() {
+      this.addSkuList.forEach(el => {
+        el.spData = JSON.stringify(el.spData);
+      });
+      const isAllFull = this.addSkuList.every(el => {
+        // console.log(el);
+        // console.log(Object.keys(el).length);
+        let count = 0;
+        for (let val in el) {
+          if (val === "spData") {
+            continue;
+          }
+          if (el[val]) {
+            count++;
+          }
+          // console.log(count);
+          if (count == Object.keys(el).length - 1) {
+            return true;
+          }
+        }
+      });
+      if (!isAllFull)
+        return this.$message.warning("请注意是否还有未输入的内容");
+      this.$emit("getskuList", this.addSkuList);
+      this.handleClose();
     },
     // 新增
     addSku() {
-      this.editSku.push({
+      this.addSkuList.push({
         lockStock: "",
         lowStock: "",
         pic: "",
         price: "",
-        productId: this.productId,
-        promotionPrice: "",
         sale: "",
         skuCode: "",
         spData: [
@@ -224,24 +214,6 @@ export default {
         ],
         stock: ""
       });
-    },
-    //删除sku
-    async delSku(item) {
-      // console.log(item);
-      const { success, message } = await delSku(item.id);
-      if (!success) this.$message.error(message);
-      this.$message.success("删除成功");
-      this.$emit("reload", success);
-    },
-    // 编辑sku
-    async editSkuFun(item) {
-      // console.log(item);
-      // spData (string, optional): 商品销售属性，json格式String类型 ,
-      item.spData = JSON.stringify(item.spData);
-      const { success, message } = await updateSkuInfo(item);
-      if (!success) this.$message.error(message);
-      this.$message.success("修改成功");
-      this.$emit("reload", success);
     },
     // 处理子组件传来的结果
     handleImgSrc(e, item) {
@@ -255,9 +227,7 @@ export default {
       console.log("关闭...");
     },
     // 打开弹窗
-    openDialog(productId) {
-      // console.log(productId);
-      this.productId = productId;
+    openDialog() {
       this.dialogVisible = true;
     }
   }

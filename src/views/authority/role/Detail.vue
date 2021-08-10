@@ -270,7 +270,7 @@ roleName (string, optional): 角色名称 */
       this.$nextTick(() => {
         if (this.editRoles.id) {
           // this.addRoleForm = this.editRoles;
-            // 深拷贝防止双向绑定页面表单会随着修改表单而变化
+          // 深拷贝防止双向绑定页面表单会随着修改表单而变化
           this.addRoleForm = JSON.parse(JSON.stringify(this.editRoles));
           // console.log(this.menu);
           this.editRoles.permissionIds?.forEach(item => {
@@ -298,7 +298,7 @@ roleName (string, optional): 角色名称 */
 
 <style scoped lang="scss">
 .dialog-detail {
-  .el-dialog {
+  ::v-deep .el-dialog {
     width: 60%;
   }
   .self-item {

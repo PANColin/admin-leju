@@ -66,7 +66,11 @@
         </el-row>
 
         <el-row :gutter="20">
-          <el-form-item label="收货地址" :label-width="formLabelWidth">
+          <el-form-item
+            label="收货地址"
+            :label-width="formLabelWidth"
+            prop="selectedRecive"
+          >
             <el-col :span="24" :offset="0">
               <el-cascader
                 size="large"
@@ -138,7 +142,10 @@ export default {
         phone: [{ required: true, validator: checkphone, trigger: "blur" }],
         postCode: [
           { type: "number", message: "邮政编码必须是数字类型", trigger: "blur" }
-        ]
+        ],
+        // selectedRecive: [
+        //   { required: true, message: "请选择地址", trigger: "change" }
+        // ]
       },
       reciveOptions: regionData,
       selectedRecive: [],

@@ -73,7 +73,7 @@
         </el-row>
 
         <el-row :gutter="10">
-          <el-col :span="12" :offset="0">
+          <el-col :span="10" :offset="0">
             <el-form-item
               class="self-row"
               label="是否展示"
@@ -92,7 +92,7 @@
               </el-switch>
             </el-form-item>
           </el-col>
-          <el-col :span="12" :offset="0">
+          <el-col :span="14" :offset="0">
             <el-form-item
               class="self-row"
               label="是否为品牌制造商"
@@ -192,7 +192,7 @@ export default {
         bigPic: ""
       },
       dialogVisible: false, // 用于控制弹窗是否打开
-      formLabelWidth: "130px",
+      formLabelWidth: "140px",
       rules: {
         name: [
           { required: true, message: "品牌不能为空", trigger: "blur" },
@@ -274,12 +274,18 @@ export default {
 
 <style scoped lang="scss">
 .dialog-detail {
+  ::v-deep .el-dialog{
+    width: 75%;
+  }
   .self-row {
-    display: flex;
-    flex-wrap: nowrap;
-    flex: none;
-    justify-content: space-around;
-    align-items: center;
+    // display: flex;
+    // flex-wrap: nowrap;
+    // flex: none;
+    // justify-content: space-around;
+    // align-items: center;
+    .el-switch {
+      margin-top: 10px;
+    }
   }
   .upload-row {
     display: flex;

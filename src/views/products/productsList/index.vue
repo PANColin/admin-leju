@@ -95,7 +95,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="6" :offset="12">
+              <el-col :span="8" :offset="10">
                 <el-form-item>
                   <el-button type="primary" @click="onSearch('ruleForm')"
                     >查询</el-button
@@ -110,6 +110,12 @@
     </el-collapse>
 
     <el-card>
+      <el-button type="primary" size="default" @click="addProduct"
+        >新增</el-button
+      >
+      <el-button type="primary" size="default" @click="exportExcel"
+        >导出excel列表</el-button
+      >
       <el-table
         v-loading="loading"
         element-loading-text="拼命加载中"
@@ -272,9 +278,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button type="danger" slot="reference" size="mini"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -364,9 +375,15 @@ export default {
   },
 
   methods: {
+    //新增商品
+    addProduct() {
+      this.$router.push({ name: "productsListAdd" });
+    },
+    // 到处excel列表
+    exportExcel() {},
     //是否最新状态改变
     async newStatusChange(e, item) {
-      console.log(e, item);
+      // console.log(e, item);
       const params = { productId: item.id, status: e };
       const { success, message } = await switchNewStatus(params);
       if (!success) return this.$message.error(message);
@@ -374,7 +391,7 @@ export default {
     },
     //是否推荐状态改变
     async recommendStatusChange(e, item) {
-      console.log(e, item);
+      // console.log(e, item);
       const params = { productId: item.id, status: e };
       const { success, message } = await switchRecommandStatus(params);
       if (!success) return this.$message.error(message);
@@ -382,7 +399,7 @@ export default {
     },
     //是否发布状态改变
     async publishStatusChange(e, item) {
-      console.log(e, item);
+      // console.log(e, item);
       const params = { productId: item.id, status: e };
       const { success, message } = await switchPublishStatus(params);
       if (!success) return this.$message.error(message);
@@ -390,21 +407,21 @@ export default {
     },
     //是否审核状态改变
     async verifyStatusChange(e, item) {
-      console.log(e, item);
+      // console.log(e, item);
       const params = { productId: item.id, status: e };
       const { success, message } = await switchVerifyStatus(params);
       if (!success) return this.$message.error(message);
       this.$message.success("修改状态成功");
     },
     reloadSku(e) {
-      console.log(e);
+      // console.log(e);
       if (e) {
         this.editSku(this.id);
       }
     },
     // 编辑sku
     async editSku(id) {
-      console.log("skuId", id);
+      // console.log("skuId", id);
       this.id = id;
       const { success, data, message } = await productSkusDetail(id);
       if (!success) return this.$message.error(message);
@@ -412,18 +429,25 @@ export default {
       data.skus.forEach(el => {
         el.spData = JSON.parse(el.spData);
       });
-      console.log(data.skus);
+      // console.log(data.skus);
       this.skuList = data.skus;
       this.$refs.sku.openDialog(data.product.id);
-      console.log(data);
+      // console.log(data);
     },
     // 编辑
     edit(item) {
-      console.log(item);
+      // console.log(item);
+      this.$router.push({ name: "productsListEdit", params: { id: item.id } });
     },
     // 删除
-    del(item) {
-      console.log(item);
+    async del(item) {
+      // console.log(item);
+      const { success, message } = await del(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      //重新刷新当前页面
+      // this.$router.go(0);
+      this.productsByPage();
     },
     // 条件查询取消按钮
     onCancle(formName) {

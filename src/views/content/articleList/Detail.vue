@@ -48,7 +48,11 @@
             />
           </el-form-item>
           <el-form-item label="封面图片">
-            <upload-img :is-show-img="true" @reciveImgSrc="handleImgSrc" />
+            <upload-img
+              :isFlex="false"
+              :is-show-img="true"
+              @reciveImgSrc="handleImgSrc"
+            />
           </el-form-item>
           <el-form-item class="changeStyle" label="切换类型">
             <el-switch
