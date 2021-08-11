@@ -1,5 +1,6 @@
 <template>
   <div>
+    <detail ref="resource" />
     <el-card shadow="hover" :body-style="{ padding: '20px' }">
       <div slot="header">
         <el-button type="success" size="default" @click="initMenu"
@@ -85,6 +86,7 @@
 
 <script>
 import copyright from "@/components/copyright/index.vue";
+import Detail from "./Detail.vue";
 import {
   findAllPermissions,
   saveInitMenus,
@@ -95,7 +97,7 @@ import {
 export default {
   name: "Resource",
 
-  components: { copyright },
+  components: { copyright, Detail },
   data() {
     return {
       loading: false,
@@ -139,9 +141,14 @@ export default {
       });
     },
     // 初始化菜单
-    initMenu() {},
+    initMenu() {
+      this.$refs.resource.openDialog({ name: "init" });
+    },
     // 新增菜单
-    addMenu() {}
+    addMenu() {
+      // 新增
+      this.$refs.resource.openDialog({ name: "addMenu" });
+    }
   }
 };
 </script>

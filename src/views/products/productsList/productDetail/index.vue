@@ -308,7 +308,7 @@
           </el-row>
           <sku-detail
             ref="sku"
-            :addSkuList="pmsSkuStockList"
+            :showSkuList="pmsSkuStockList"
             @getskuList="getpmsSkuStockList"
           ></sku-detail>
           <el-row :gutter="20">
@@ -509,6 +509,8 @@ export default {
       // 富文本赋值
       this.product.detailDesc = this.tinContent;
       this.product.detailHtml = this.tinContent;
+      // 保存之前检查sku是否填写
+      if (this.pmsSkuStockList.length <= 0) return this.$message.warning("请检查sku列表是否填写");
 
       let params, api, msg;
       if (this.$route.meta.isEdit) {
@@ -525,7 +527,7 @@ export default {
         };
       } else {
         api = addProductAndSkus;
-        msg = "保存成功";
+        msg = "添加成功";
         params = {
           pmsSkuStockList: this.pmsSkuStockList,
           product: this.product
@@ -541,6 +543,9 @@ export default {
     // getpmsSkuStockList
     getpmsSkuStockList(e) {
       // console.log(e);
+      // e.forEach(el => {
+      //   el.spData = JSON.stringify(el.spData);
+      // });
       // e.spData = JSON.stringify(e.spData);
       this.pmsSkuStockList = e;
       // console.log(this.pmsSkuStockList);

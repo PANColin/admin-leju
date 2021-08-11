@@ -150,7 +150,7 @@ import UploadImg from "@/components/UploadImg/UploadImg.vue";
 export default {
   components: { UploadImg },
   props: {
-    addSkuList: {
+    showSkuList: {
       type: Array,
       default() {
         return [];
@@ -159,10 +159,14 @@ export default {
   },
   computed: {},
   created() {},
-  mounted() {},
+  mounted() {
+    // console.log(this.showSkuList);
+    this.addSkuList = this.showSkuList;
+    // this.addSkuList = JSON.parse(JSON.stringify(this.showSkuList));
+  },
   data() {
     return {
-      // addSkuList: [],
+      addSkuList: [],
       dialogVisible: false // 用于控制弹窗是否打开
     };
   },
@@ -178,24 +182,39 @@ export default {
         el.spData = JSON.stringify(el.spData);
       });
       const isAllFull = this.addSkuList.every(el => {
-        // console.log(el);
-        // console.log(Object.keys(el).length);
+        console.log(el);
         let count = 0;
         for (let val in el) {
-          if (val === "spData") {
+          if (
+            val === "spData" ||
+            val === "createTime" ||
+            val === "id" ||
+            val === "productId" ||
+            val === "promotionPrice" ||
+            val === "modifyTime"
+          ) {
             continue;
           }
+          // console.log(Object.keys(el).length);
           if (el[val]) {
             count++;
           }
-          // console.log(count);
-          if (count == Object.keys(el).length - 1) {
-            return true;
+          // console.log(count, val);
+          //判断是否是编辑
+          if (this.$route.meta.isEdit) {
+            if (count == Object.keys(el).length - 6) {
+              return true;
+            }
+          } else {
+            if (count == Object.keys(el).length - 1) {
+              return true;
+            }
           }
         }
       });
       if (!isAllFull)
         return this.$message.warning("请注意是否还有未输入的内容");
+      this.$message.success("获取skuList成功");
       this.$emit("getskuList", this.addSkuList);
       this.handleClose();
     },

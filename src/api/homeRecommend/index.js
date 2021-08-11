@@ -9,7 +9,7 @@ function addRecommend(data) {
   })
 }
 // 删除限时活动 data:RecommendVo对象
-function delRecommend(datrecommendIda) {
+function delRecommend(recommendId) {
   return request({
     url: `/lejuAdmin/homeRecommend/delRecommend/${recommendId}`,
     method: 'delete'

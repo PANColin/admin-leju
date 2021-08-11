@@ -113,7 +113,11 @@
       <el-button type="primary" size="default" @click="addProduct"
         >新增</el-button
       >
-      <el-button type="primary" size="default" @click="exportExcel"
+      <el-button
+        type="primary"
+        size="default"
+        :loading="downloadLoading"
+        @click="exportExcel"
         >导出excel列表</el-button
       >
       <el-table
@@ -328,6 +332,7 @@ export default {
 
   data() {
     return {
+      downloadLoading: false,
       id: "", //商品id
       activeName: 1,
       loading: false,
@@ -380,7 +385,31 @@ export default {
       this.$router.push({ name: "productsListAdd" });
     },
     // 到处excel列表
-    exportExcel() {},
+    exportExcel() {
+      this.downloadLoading = true;
+      import("@/vendor/Export2Excel").then(excel => {
+        const tHeader = ["商品名称", "商品品牌", "商品价格"];
+        const filterVal = ["name", "brandName", "price"];
+        const list = this.list;
+        const data = this.formatJson(filterVal, list);
+        // console.log('list===',JSON.stringify()list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        });
+        this.downloadLoading = false;
+      });
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          return v[j];
+        })
+      );
+    },
     //是否最新状态改变
     async newStatusChange(e, item) {
       // console.log(e, item);

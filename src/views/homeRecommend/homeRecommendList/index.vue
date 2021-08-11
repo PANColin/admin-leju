@@ -1,6 +1,9 @@
 <template>
   <div>
+    <add-r ref="addR"></add-r>
+    <sub-add ref="subAdd"></sub-add>
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" size="default" @click="add">新增</el-button>
       <el-table v-loading="loading" border :data="list" style="width: 100%">
         <el-table-column
           align="center"
@@ -32,7 +35,7 @@
         <el-table-column align="center" label="是否过期" width="220">
           <template slot-scope="scope">
             <el-tag type="info">
-              {{ scope.row.sort == 2 ? "否" : "过期" }}
+              {{ scope.row.stale }}
             </el-tag>
           </template>
         </el-table-column>
@@ -77,12 +80,17 @@
           fixed="right"
         >
           <template slot-scope="scope">
-            <!-- <el-button type="primary" size="mini" @click="edit(scope.row)"
+            <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
-            > -->
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
             >
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
+            >
+              <el-button slot="reference" type="danger" size="mini"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -91,7 +99,9 @@
   </div>
 </template>
 <script>
+import subAdd from "./add/subAdd/Detail.vue";
 import copyright from "@/components/copyright/index.vue";
+import addR from "./add/index.vue";
 import {
   addRecommend,
   delRecommend,
@@ -102,8 +112,8 @@ import {
 export default {
   name: "SaleList",
 
-  components: { copyright },
-
+  components: { copyright, addR, subAdd },
+  computed: {},
   data() {
     return {
       loading: false,
@@ -121,13 +131,28 @@ export default {
   },
 
   methods: {
+    judgeTime(endTime) {
+      // console.log(new Date(endTime).getTime())
+      var num = new Date().getTime() - new Date(endTime).getTime();
+      return num > 0 ? "过期" : "否";
+    },
+    add() {
+      this.$refs.addR.openDialog();
+    },
     // 编辑
-    // edit(item) {
-    //   console.log(item);
-    // },
-    // 删除
-    del(item) {
+    edit(item) {
       console.log(item);
+      this.$refs.subAdd.openDialog(item);
+    },
+    // 删除
+    async del(item) {
+      console.log(item);
+      const { success, message } = await delRecommend(item.recommendId);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      //重新刷新当前页面
+      // this.$router.go(0);
+      this.findAllRecommends();
     },
     //图片加载错误回调
     handleError(val) {
@@ -145,6 +170,7 @@ export default {
       this.list = res.data.items;
       res.data.items.forEach(el => {
         // console.log(el)
+        el.stale = this.judgeTime(el.promotionEndTime);
         el.icon ||=
           "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
       });

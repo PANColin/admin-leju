@@ -1,6 +1,9 @@
 <template>
   <div>
+    <add-b ref="addB"></add-b>
     <el-card style="width:95%;margin: 20px auto;">
+      <el-button type="primary" size="default" @click="add">新增</el-button>
+
       <el-table v-loading="loading" border :data="list" style="width: 100%">
         <el-table-column
           align="center"
@@ -53,9 +56,20 @@
             }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="链接地址" width="180">
+        <el-table-column
+          align="center"
+          label="链接地址"
+          width="180"
+          show-overflow-tooltip
+        >
           <template slot-scope="scope">
-            <a :href="scope.row.user ? scope.row.user : '#'">链接</a>
+            <el-link
+              :href="scope.row.url ? scope.row.url : '#'"
+              :disabled="scope.row.url ? false : true"
+              target="_blank"
+            >
+              {{ scope.row.url || "无链接" }}
+            </el-link>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="note" label="备注" width="180" />
@@ -81,9 +95,14 @@
             <el-button type="primary" size="mini" @click="edit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
+            <el-popconfirm
+              title="亲,您确定要删除吗？"
+              @onConfirm="del(scope.row)"
             >
+              <el-button type="danger" size="mini" slot="reference"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -92,6 +111,7 @@
   </div>
 </template>
 <script>
+import addB from "./add/Detail.vue";
 import copyright from "@/components/copyright/index.vue";
 import {
   addAds,
@@ -102,7 +122,7 @@ import {
 export default {
   name: "BannerList",
 
-  components: { copyright },
+  components: { copyright, addB },
 
   data() {
     return {
@@ -121,13 +141,23 @@ export default {
   },
 
   methods: {
+    add() {
+      this.$refs.addB.openDialog();
+    },
     // 编辑
     edit(item) {
       console.log(item);
+      this.$refs.addB.openDialog(item);
     },
     // 删除
-    del(item) {
+    async del(item) {
       console.log(item);
+      const { success, message } = await delAds(item.id);
+      if (!success) return this.$message.error(message);
+      this.$message.success("删除成功");
+      //重新刷新当前页面
+      // this.$router.go(0);
+      this.adsList();
     },
     //图片加载错误回调
     handleError(val) {
