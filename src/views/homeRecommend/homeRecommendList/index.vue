@@ -141,7 +141,7 @@ export default {
     },
     // 编辑
     edit(item) {
-      console.log(item);
+      // console.log(item);
       this.$refs.subAdd.openDialog(item);
     },
     // 删除

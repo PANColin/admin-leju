@@ -74,16 +74,26 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="16" :offset="0">
-            <el-form-item label="期限" :label-width="formLabelWidth">
+          <el-col :span="8" :offset="0">
+            <el-form-item label="开始时间" :label-width="formLabelWidth">
               <el-date-picker
-                v-model="timeValueArr"
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                v-model="addHForm.promotionStartTime"
+                type="datetime"
+                placeholder="选择日期时间"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="0">
+            <el-form-item label="结束时间" :label-width="formLabelWidth">
+              <el-date-picker
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                v-model="addHForm.promotionEndTime"
+                type="datetime"
+                placeholder="选择日期时间"
               >
               </el-date-picker>
             </el-form-item>
@@ -124,7 +134,6 @@ export default {
     return {
       addHForm: {},
       product: {},
-      timeValueArr: [],
       dialogVisible: false, // 用于控制弹窗是否打开
       formLabelWidth: "140px",
       rules: {
@@ -160,8 +169,6 @@ export default {
     },
     // 执行保存
     doSave() {
-      this.addHForm.promotionStartTime = this.timeValueArr[0];
-      this.addHForm.promotionEndTime = this.timeValueArr[1];
       this.addHForm.type = 0;
       let api, msg;
       if (this.product.promotionStartTime) {
@@ -194,11 +201,6 @@ export default {
       this.product = val;
       this.$nextTick(() => {
         this.addHForm = JSON.parse(JSON.stringify(val));
-        // 如果有开始限时的时间表示更新
-        if (val.promotionStartTime) {
-          this.timeValueArr[0] = val.promotionStartTime;
-          this.timeValueArr[1] = val.promotionEndTime;
-        }
         // console.log(this.addHForm);
       });
       this.dialogVisible = true;

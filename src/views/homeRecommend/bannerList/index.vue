@@ -142,12 +142,13 @@ export default {
 
   methods: {
     add() {
-      this.$refs.addB.openDialog();
+      this.$refs.addB.openDialog({ name: "add" });
     },
     // 编辑
     edit(item) {
       // console.log(item);
       this.$refs.addB.openDialog(item);
+      // this.$refs.addB.setEddTimer(item);
     },
     // 删除
     async del(item) {

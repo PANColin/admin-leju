@@ -91,9 +91,10 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="16" :offset="0">
-            <el-form-item label="期限" :label-width="formLabelWidth">
-              <el-date-picker
+          <el-col :span="8" :offset="0">
+            <el-form-item label="开始时间" :label-width="formLabelWidth">
+              <!-- <el-date-picker
+                :unlink-panels="true"
                 v-model="timeValueArr"
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
@@ -102,11 +103,35 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
               >
+              </el-date-picker> -->
+              <el-date-picker
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                v-model="addBrandForm.startTime"
+                type="datetime"
+                placeholder="选择日期时间"
+              >
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="8" :offset="0">
-            <el-form-item label="上下线状态" size="normal">
+            <el-form-item label="结束时间" :label-width="formLabelWidth">
+              <el-date-picker
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                v-model="addBrandForm.endTime"
+                type="datetime"
+                placeholder="选择日期时间"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="0">
+            <el-form-item
+              label="上下线状态"
+              size="normal"
+              :label-width="formLabelWidth"
+            >
               <el-switch
                 v-model="addBrandForm.status"
                 :active-value="0"
@@ -158,7 +183,7 @@ export default {
         { id: 2, label: "其他", value: 1 }
       ],
       brand: {},
-      timeValueArr: [],
+      // timeValueArr: [],
       dialogVisible: false, // 用于控制弹窗是否打开
       formLabelWidth: "140px",
       rules: {
@@ -195,8 +220,9 @@ export default {
     },
     // 执行保存
     doSave() {
-      this.addBrandForm.startTime = this.timeValueArr[0];
-      this.addBrandForm.endTime = this.timeValueArr[1];
+      console.log(this.addBrandForm);
+      // this.addBrandForm.startTime = this.timeValueArr[0];
+      // this.addBrandForm.endTime = this.timeValueArr[1];
       let api, msg;
       if (this.brand.id) {
         api = updateAds;
@@ -220,6 +246,10 @@ export default {
         }
       });
     },
+    // setEddTimer(item) {
+    //   this.timeValueArr[0] = item.startTime;
+    //   this.timeValueArr[1] = item.endTime;
+    // },
     // 打开弹窗
     openDialog(val) {
       // console.log(val, "sbuAdd");
@@ -228,12 +258,16 @@ export default {
         if (val?.id) {
           this.brand = val;
           this.addBrandForm = JSON.parse(JSON.stringify(val));
-          this.timeValueArr[0] = val.startTime;
-          this.timeValueArr[1] = val.endTime;
+          // this.timeValueArr[0] = val.startTime;
+          // this.timeValueArr[1] = val.endTime;
+          // this.$set(this.timeValueArr, this.timeValueArr[0], val.startTime);
+          // this.$set(this.timeValueArr, this.timeValueArr[1], val.endTime);
         } else {
           this.addBrandForm = {};
           this.brand = {};
-          this.timeValueArr = [];
+          // if (val.name === "add") {
+          //   this.timeValueArr = [];
+          // }
         }
         // console.log(this.addBrandForm);
       });

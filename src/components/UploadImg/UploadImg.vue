@@ -32,7 +32,7 @@
       <img
         v-if="imgSrcStr || imgSrc"
         class="cover-img"
-        :src="imgSrcStr || imgSrc"
+        :src="imgSrc || imgSrcStr"
         alt=""
       />
       <i
