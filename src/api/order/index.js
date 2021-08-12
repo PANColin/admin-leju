@@ -26,7 +26,6 @@ function receiveProductsForce(orderId) {
   return request({
     url: `/lejuAdmin/order/receiveProductsForce/${orderId}`,
     method: 'post',
-    data
   })
 }
 // 确认发货 header:token data:map:orderId,deliverySn,deliveryCompany

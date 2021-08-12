@@ -26,7 +26,7 @@
             >
               <el-input
                 placeholder="请输入角色编码"
-                v-model.number="addRoleForm.roleCode"
+                v-model="addRoleForm.roleCode"
                 autocomplete="off"
               />
             </el-form-item>

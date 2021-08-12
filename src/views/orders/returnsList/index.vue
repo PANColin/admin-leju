@@ -80,20 +80,6 @@
           show-overflow-tooltip
           width="180"
         />
-
-        <el-table-column align="center" label="支付方式" width="110">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.payType == 0 ? 'info' : 'success'">
-              {{
-                scope.row.payType == 0
-                  ? "未支付"
-                  : scope.row.payType == 1
-                  ? "支付宝"
-                  : "微信"
-              }}
-            </el-tag>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="退单状态" width="160">
           <template slot-scope="scope">
             <el-tag type="danger" effect="dark" v-if="scope.row.status == 0">
@@ -259,7 +245,7 @@ export default {
   methods: {
     //查看订单
     checkOrder(item) {
-      console.log(item);
+      // console.log(item);
       this.$router.push({ name: "orderReturnDetail", params: { id: item.id } });
     },
     // 条件查询取消按钮
@@ -269,7 +255,7 @@ export default {
     },
     // 条件查询确定按钮
     onSearch(formName) {
-      console.log(formName);
+      // console.log(formName);
       this.findReturnApply();
       // 重置分页数据
       this.pageInfo.start = 1;

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-card shadow="hover" :body-style="{ padding: '20px' }">
+    <!-- 防止闪烁 -->
+    <el-card
+      shadow="hover"
+      :body-style="{ padding: '20px' }"
+      v-if="orderBase.id"
+    >
       <div class="row1">
         <el-steps
           v-if="orderBase.status !== 5"
@@ -96,7 +101,9 @@
           </el-table-column>
           <el-table-column align="center" label="是否退货">
             <template slot-scope="scope">
-              <el-tag>{{ scope.row.isReturn ? "是" : "否" }}</el-tag>
+              <el-tag :type="scope.row.isReturn ? 'danger' : 'info'">{{
+                scope.row.isReturn ? "是" : "否"
+              }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -239,6 +246,20 @@
         </el-table>
         <div
           class="btm"
+          v-if="orderBase.status === 2 && forceSendShow"
+          style="text-align:center;margin:10px"
+        >
+          <el-popconfirm
+            title="亲,您确定要强制确认收货吗？"
+            @onConfirm="forceReciveOrder"
+          >
+            <el-button slot="reference" type="danger" round size="default"
+              >强制确认收货</el-button
+            >
+          </el-popconfirm>
+        </div>
+        <div
+          class="btm"
           v-if="orderBase.status === 3"
           style="text-align:center;margin:10px"
         >
@@ -321,6 +342,7 @@ export default {
   },
   data() {
     return {
+      forceSendShow: true,
       // 物流信息详情：假数据
       tableData: [
         {
@@ -401,8 +423,25 @@ export default {
     data.orderDetail.orderBase.receiverPostCode ||= "无";
     this.orderBase = data.orderDetail.orderBase;
     this.orderItems = data.orderDetail.orderItems;
+    this.judgeForce();
   },
   methods: {
+    // 判断是否显示强势退货按钮
+    judgeForce() {
+      this.orderItems.forEach(element => {
+        if (element.isReturn === 0) {
+          this.forceSendShow = false;
+        }
+      });
+    },
+    // 强制确认收货
+    async forceReciveOrder() {
+      const orderId = this.orderBase.id;
+      const { success, message } = await receiveProductsForce(orderId);
+      if (!success) return this.$message.error(message);
+      this.$message.success("强制确认收货成功");
+      this.$router.go(0);
+    },
     // 关闭订单
     async closeOrder() {
       const orderId = this.orderBase.id;

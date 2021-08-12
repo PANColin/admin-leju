@@ -172,7 +172,7 @@ export default {
   methods: {
     // 编辑
     edit(id) {
-      console.log(id);
+      // console.log(id);
       this.$router.push({ name: "articleListEdit", params: { id } });
     },
     changeEvent(e) {

@@ -146,7 +146,7 @@ export default {
     },
     // 删除
     async del(item) {
-      console.log(item);
+      // console.log(item);
       const { success, message } = await delRecommend(item.recommendId);
       if (!success) return this.$message.error(message);
       this.$message.success("删除成功");

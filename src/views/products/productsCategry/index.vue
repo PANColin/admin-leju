@@ -117,7 +117,7 @@ export default {
       el.category.children = el.children;
     });
     this.allCategoryList = data.items.map(el => el.category);
-    console.log(this.allCategoryList);
+    // console.log(this.allCategoryList);
   },
   data() {
     return {

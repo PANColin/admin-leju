@@ -146,12 +146,12 @@ export default {
     },
     // 编辑
     edit(item) {
-      console.log(item);
+      // console.log(item);
       this.$refs.addB.openDialog(item);
     },
     // 删除
     async del(item) {
-      console.log(item);
+      // console.log(item);
       const { success, message } = await delAds(item.id);
       if (!success) return this.$message.error(message);
       this.$message.success("删除成功");

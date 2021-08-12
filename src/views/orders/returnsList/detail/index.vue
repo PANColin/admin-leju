@@ -1,6 +1,10 @@
 <template>
   <div>
-    <el-card shadow="hover" :body-style="{ padding: '20px' }">
+    <el-card
+      shadow="hover"
+      :body-style="{ padding: '20px' }"
+      v-if="orderReturnApply.id"
+    >
       <div slot="header">
         <h2>退单详情</h2>
       </div>
@@ -329,7 +333,10 @@ export default {
   methods: {
     // 查看订单详情
     orderDetail() {
-     this.$router.push({ name: "orderDetail", params: { id: this.orderReturnApply.orderId } });
+      this.$router.push({
+        name: "orderDetail",
+        params: { id: this.orderReturnApply.orderId }
+      });
     },
     //重置表单
     reset() {

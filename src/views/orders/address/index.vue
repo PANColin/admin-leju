@@ -175,7 +175,7 @@ export default {
     },
     // 点击确认按钮刷新列表
     async getList(e) {
-      console.log(e);
+      // console.log(e);
       // console.log("执行刷新");
       // 有id 表示编辑否则添加
       let api = e.id ? update : save;

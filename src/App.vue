@@ -24,10 +24,10 @@ export default {
 .el-collapse {
   text-indent: 20px;
 }
-.el-row{
+.el-row {
   margin: 20px 0;
 }
-.el-button{
+.el-button {
   margin: 6px;
 }
 </style>

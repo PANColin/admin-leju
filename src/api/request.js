@@ -1,6 +1,8 @@
 import axios from 'axios'
 import router from '@/router'
 import { MessageBox, Message } from 'element-ui'
+
+import { showLoading, hideLoading } from '@/utils/loading'
 import store from '@/store'
 import { getToken, clearAll } from '@/utils/auth'
 
@@ -15,6 +17,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在请求体和请求头做一些操作
+    showLoading() // 开启loading
     const token = getToken()
     if (token) {
       config.headers['token'] = token
@@ -23,6 +26,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
+    hideLoading()
     console.log(error) // for debug
     return Promise.reject(error)
   }
@@ -32,6 +36,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
+    hideLoading() // 关闭loading
     if (res.code === 20002) {
       // Message({
       //   message: res.message,
@@ -46,6 +51,7 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
+    hideLoading() // 关闭loading
     Message({
       message: error.message,
       type: 'error',

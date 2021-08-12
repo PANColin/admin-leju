@@ -305,7 +305,7 @@ export default {
   methods: {
     //查看订单
     checkOrder(item) {
-      console.log(item);
+      // console.log(item);
       this.$router.push({ name: "orderDetail", params: { id: item.id } });
     },
     // 条件查询取消按钮
@@ -315,7 +315,7 @@ export default {
     },
     // 条件查询确定按钮
     onSearch(formName) {
-      console.log(formName);
+      // console.log(formName);
       this.findOrdersByPage();
       // 重置分页数据
       this.pageInfo.start = 1;

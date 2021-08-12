@@ -55,7 +55,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="20" v-if="radio == 1 || radio == 2">
+          <el-row :gutter="20" v-show="radio == 1 || radio == 2">
             <el-col :span="24" :offset="0">
               <el-form-item
                 :label="radio == 1 ? '上级菜单' : '所在页面'"
@@ -77,7 +77,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <div v-if="radio != 2">
+          <div v-show="radio != 2">
             <el-row :gutter="20">
               <el-col :span="24" :offset="0">
                 <el-form-item
@@ -139,7 +139,7 @@
               </el-col>
             </el-row>
           </div>
-          <div v-if="radio == 2">
+          <div v-show="radio == 2">
             <el-row :gutter="20">
               <el-col :span="24" :offset="0">
                 <el-form-item
@@ -187,7 +187,7 @@
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12" :offset="0" v-if="radio == 1 || radio == 2">
+            <el-col :span="12" :offset="0" v-show="radio == 1 || radio == 2">
               <el-form-item
                 label="层级"
                 :label-width="formLabelWidth"
@@ -241,7 +241,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="20" v-if="radio != 2">
+          <el-row :gutter="20" v-show="radio != 2">
             <el-form-item
               label="meta属性"
               size="normal"

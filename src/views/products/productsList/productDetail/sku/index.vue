@@ -182,7 +182,7 @@ export default {
         el.spData = JSON.stringify(el.spData);
       });
       const isAllFull = this.addSkuList.every(el => {
-        console.log(el);
+        // console.log(el);
         let count = 0;
         for (let val in el) {
           if (
@@ -243,7 +243,7 @@ export default {
     // 弹窗关闭的时候触发
     handleClose() {
       this.dialogVisible = false;
-      console.log("关闭...");
+      // console.log("关闭...");
     },
     // 打开弹窗
     openDialog() {

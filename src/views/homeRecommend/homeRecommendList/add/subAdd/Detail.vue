@@ -156,7 +156,7 @@ export default {
     // 弹窗关闭的时候触发
     handleClose() {
       this.dialogVisible = false;
-      console.log("关闭...");
+      // console.log("关闭...");
     },
     // 执行保存
     doSave() {
@@ -190,7 +190,7 @@ export default {
     },
     // 打开弹窗
     openDialog(val) {
-      console.log(val, "sbuAdd");
+      // console.log(val, "sbuAdd");
       this.product = val;
       this.$nextTick(() => {
         this.addHForm = JSON.parse(JSON.stringify(val));

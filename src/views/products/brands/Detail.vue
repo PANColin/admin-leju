@@ -236,7 +236,7 @@ export default {
     // 弹窗关闭的时候触发
     handleClose() {
       this.dialogVisible = false;
-      console.log("关闭...");
+      // console.log("关闭...");
     },
     // 执行保存
     doBrandSave() {

@@ -168,7 +168,7 @@ export default {
   methods: {
     //是否展示
     async showStatusChange(e, item) {
-      console.log(e, item);
+      // console.log(e, item);
       const { success, message } = await switchShowStatus({
         id: item.id,
         status: e

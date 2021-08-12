@@ -185,13 +185,13 @@ export default {
   },
   methods: {
     handleRecivePic(e) {
-      console.log(e);
+      // console.log(e);
       this.addBrandForm.pic = e.url;
     },
     // 弹窗关闭的时候触发
     handleClose() {
       this.dialogVisible = false;
-      console.log("关闭...");
+      // console.log("关闭...");
     },
     // 执行保存
     doSave() {
@@ -222,7 +222,7 @@ export default {
     },
     // 打开弹窗
     openDialog(val) {
-      console.log(val, "sbuAdd");
+      // console.log(val, "sbuAdd");
       this.$nextTick(() => {
         // 如果有开始限时的时间表示更新
         if (val?.id) {

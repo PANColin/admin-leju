@@ -127,7 +127,7 @@ export default {
   methods: {
     // 处理子组件传来的结果
     handleImgSrc(e) {
-      console.log(e);
+      // console.log(e);
       // 赋值
       this.article.coverImg = e.url;
     },

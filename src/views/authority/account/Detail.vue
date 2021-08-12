@@ -182,10 +182,10 @@ export default {
     },
     // 处理子组件传来的结果
     handleImgSrc(e) {
-      console.log(e);
+      // console.log(e);
       // 赋值
       this.adduserRoleForm.salt = e.url;
-      console.log(this.adduserRoleForm);
+      // console.log(this.adduserRoleForm);
     },
     clearAll() {
       // console.log(this.adduserRoleForm);
@@ -216,7 +216,7 @@ export default {
     openDialog() {
       this.$nextTick(() => {
         if (this.editRoles.id) {
-          console.log(this.editRoles.id);
+          // console.log(this.editRoles.id);
           // this.adduserRoleForm = this.editRoles;
           // 深拷贝防止双向绑定页面表单会随着修改表单而变化
           this.adduserRoleForm = JSON.parse(JSON.stringify(this.editRoles));

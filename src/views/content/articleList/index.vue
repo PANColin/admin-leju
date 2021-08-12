@@ -223,12 +223,12 @@ export default {
     },
     // 编辑
     edit(item) {
-      console.log(item);
+      // console.log(item);
       this.$router.push({ name: "articleListEdit", params: { id: item.id } });
     },
     // 删除
     async del(item) {
-      console.log(item);
+      // console.log(item);
       const { success, message } = await del(item.id);
       if (!success) return this.$message.error(message);
       this.$message.success("删除成功");
@@ -256,7 +256,7 @@ export default {
             this.pageInfo.limit = 10;
           }
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -275,7 +275,7 @@ export default {
         this.pageInfo.limit,
         this.searchForm
       );
-      console.log(res);
+      // console.log(res);
       if (!res.success) return this.$message.error(res.message);
       this.loading = false;
       this.total = res.data.total;
