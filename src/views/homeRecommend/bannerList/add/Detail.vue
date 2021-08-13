@@ -220,7 +220,7 @@ export default {
     },
     // 执行保存
     doSave() {
-      console.log(this.addBrandForm);
+      // console.log(this.addBrandForm);
       // this.addBrandForm.startTime = this.timeValueArr[0];
       // this.addBrandForm.endTime = this.timeValueArr[1];
       let api, msg;

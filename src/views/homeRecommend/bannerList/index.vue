@@ -169,12 +169,12 @@ export default {
     },
     async adsList() {
       this.loading = true;
-      const res = await adsListAPI();
+      const { success, data, message } = await adsListAPI();
       // console.log(res);
-      if (!res.success) return this.$message.error(res.message);
+      if (!success) return this.$message.error(message);
       this.loading = false;
-      this.list = res.data.items;
-      res.data.items.forEach(el => {
+      this.list = data.items;
+      data.items.forEach(el => {
         // console.log(el)
         el.icon ||=
           "https://img0.baidu.com/it/u=59285992,513800291&fm=26&fmt=auto&gp=0.jpg";
