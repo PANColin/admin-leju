@@ -10,7 +10,7 @@
       :multiple="isMultiple"
       :limit="limitNumber"
       :show-file-list="false"
-      :action="uploadUrl"
+      :action="baseUrl + uploadUrl"
       :on-change="changeUpload"
     >
       <el-button v-if="listType == 'text'" size="small" type="primary"
@@ -110,6 +110,7 @@ export default {
   mounted() {},
   data() {
     return {
+      baseUrl: "https://leju.bufan.cloud",
       picList: [],
       imgSrc: "" //https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20210805143648153img.jpg
     };
