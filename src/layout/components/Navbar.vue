@@ -11,11 +11,12 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
+          <span>欢迎： {{ userInfo.username }}</span>
           <img :src="userInfo.icon" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <a target="_blank" href="http://jinglins.gitee.io/leju/#/">
+          <a target="_blank" href="https://pancolin.github.io/leju-h5/">
             <el-dropdown-item>
               乐居客服端预览
             </el-dropdown-item>
@@ -23,12 +24,9 @@
           <a target="_blank" href="https://pancolin.github.io/travel">
             <el-dropdown-item>漫旅</el-dropdown-item>
           </a>
-          <!-- <a
-            target="_blank"
-            href="https://pancolin.github.io/douban/"
-          >
-            <el-dropdown-item>豆瓣电影</el-dropdown-item>
-          </a> -->
+          <a target="_blank" href="https://pancolin.github.io/Ugou-h5/">
+            <el-dropdown-item>U购</el-dropdown-item>
+          </a>
           <a target="_blank" href="https://pancolin.github.io/bufan/">
             <el-dropdown-item>工具</el-dropdown-item>
           </a>
@@ -57,6 +55,9 @@ export default {
     userInfo() {
       return getUserInfo();
     }
+  },
+  created() {
+    // console.log(this.userInfo);
   },
   methods: {
     toggleSideBar() {
@@ -129,7 +130,10 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
         .user-avatar {
           cursor: pointer;
           width: 40px;
