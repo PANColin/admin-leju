@@ -3,7 +3,7 @@ import request from '@/api/request'
 // 查询素材列表
 function findMaterialByPage(start, limit) {
   return request({
-    url: ` /lejuAdmin/material/findMaterialByPage/${start}/${limit}`
+    url: `/lejuAdmin/material/findMaterialByPage/${start}/${limit}`
   })
 }
 // 通用素材上传接口
