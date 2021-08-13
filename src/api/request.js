@@ -10,7 +10,7 @@ import { getToken, clearAll } from '@/utils/auth'
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   baseURL:'https://leju.bufan.cloud',
-  withCredentials: true, // send cookies when cross-domain requests
+  // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
 
