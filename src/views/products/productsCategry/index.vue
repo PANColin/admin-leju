@@ -101,11 +101,11 @@ import {
   getAllCategory,
   updateCategory
 } from "@/api/category/index";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 
 export default {
   name: "goodsCategry",
-  components: { copyright },
+  components: { },
   async created() {
     this.loading = true;
     const { success, message, data } = await getAllCategory();

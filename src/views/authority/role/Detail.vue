@@ -280,9 +280,10 @@ roleName (string, optional): 角色名称 */
           this.$refs.tree.setCheckedNodes(this.checkedKeys);
           // console.log(this.$refs.tree.store._getAllNodes().length);
           // console.log(this.$refs.tree.getCheckedNodes(this.menu).length);
+          const checkLength = this.$refs.tree.getCheckedNodes(this.menu).length;
           // console.log(this.$refs.tree.getNode);
           //总长度暂时写死
-          if (this.checkedKeys.length === 76) {
+          if (this.checkedKeys.length === 79) {
             this.isAll = true;
           } else {
             this.isAll = false;

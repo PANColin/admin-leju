@@ -182,7 +182,7 @@
   </div>
 </template>
 <script>
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   findReturnApply as findReturnApplyAPI,
   agreeApply,
@@ -193,7 +193,7 @@ import {
 export default {
   name: "returnsList",
 
-  components: { copyright },
+  components: { },
 
   data() {
     return {

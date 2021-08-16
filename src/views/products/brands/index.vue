@@ -133,7 +133,7 @@
 </template>
 <script>
 import Detail from "./Detail.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   addBrand,
   delBrand,
@@ -145,7 +145,7 @@ import {
 export default {
   name: "Brands",
 
-  components: { copyright, Detail },
+  components: { Detail },
 
   data() {
     return {

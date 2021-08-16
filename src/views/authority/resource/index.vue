@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import Detail from "./Detail.vue";
 import {
   findAllPermissions,
@@ -97,7 +97,7 @@ import {
 export default {
   name: "Resource",
 
-  components: { copyright, Detail },
+  components: { Detail },
   data() {
     return {
       loading: false,

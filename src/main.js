@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN'
 
 import '@/styles/index.scss' // global css
+import copyright from "@/components/copyright/index.vue";
 
 import App from './App'
 import store from './store'
@@ -27,6 +28,8 @@ import '@/permission' // permission control
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
+//把自己的组件挂载到全局上
+Vue.component('copyright',copyright)
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()

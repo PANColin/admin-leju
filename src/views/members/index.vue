@@ -69,12 +69,12 @@
   </div>
 </template>
 <script>
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import { findMembersByPage } from "@/api/user/index";
 export default {
   name: "Account",
 
-  components: { copyright },
+  components: { },
 
   data() {
     return {

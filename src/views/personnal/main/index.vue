@@ -142,11 +142,11 @@
 
 <script>
 import { getUserInfo } from "@/utils/auth";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import { findArticles as findArticlesAPI } from "@/api/productArticle/index";
 export default {
   name: "Main",
-  components: { copyright },
+  components: { },
   data() {
     return {
       activeName: "article",

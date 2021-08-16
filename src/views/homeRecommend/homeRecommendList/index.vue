@@ -100,7 +100,7 @@
 </template>
 <script>
 import subAdd from "./add/subAdd/Detail.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import addR from "./add/index.vue";
 import {
   addRecommend,
@@ -112,7 +112,7 @@ import {
 export default {
   name: "SaleList",
 
-  components: { copyright, addR, subAdd },
+  components: {addR, subAdd },
   computed: {},
   data() {
     return {

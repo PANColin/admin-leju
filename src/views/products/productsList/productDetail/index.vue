@@ -377,7 +377,7 @@ import Tinymce from "@/components/Tinymce";
 // import MarkdownEditor from "@/components/MarkdownEditor";
 import skuDetail from "./sku/index.vue";
 import UploadImg from "@/components/UploadImg/UploadImg.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import { findAllBrand } from "@/api/brand/index";
 import {
   addProductAndSkus,
@@ -394,7 +394,7 @@ import {
 export default {
   name: "productDetail",
 
-  components: { copyright, UploadImg, skuDetail, Tinymce },
+  components: {  UploadImg, skuDetail, Tinymce },
 
   data() {
     return {
@@ -514,9 +514,13 @@ export default {
 
       let params, api, msg;
       if (this.$route.meta.isEdit) {
+        // console.log( this.product);
         api = updateProductAndSkus;
-        this.product.albumPics = this.product.albumPics?.join(",");
-        this.product.serviceIds = this.product.serviceIds.join(",");
+        if(Array.isArray(this.product.albumPics) && Array.isArray(this.product.serviceIds) ){
+
+          this.product.albumPics = this.product?.albumPics?.join(",");
+          this.product.serviceIds = this.product?.serviceIds.join(",");
+        }
         this.pmsSkuStockList.forEach(el => {
           el.spData = JSON.stringify(el.spData);
         });

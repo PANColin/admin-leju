@@ -178,21 +178,19 @@ export default {
     },
     // 获取skuList
     getskuList() {
-      this.addSkuList.forEach(el => {
-        el.spData = JSON.stringify(el.spData);
-      });
+      const continueArr = [
+        "spData",
+        "createTime",
+        "id",
+        "productId",
+        "promotionPrice",
+        "modifyTime"
+      ];
       const isAllFull = this.addSkuList.every(el => {
         // console.log(el);
         let count = 0;
         for (let val in el) {
-          if (
-            val === "spData" ||
-            val === "createTime" ||
-            val === "id" ||
-            val === "productId" ||
-            val === "promotionPrice" ||
-            val === "modifyTime"
-          ) {
+          if (continueArr.includes(val)) {
             continue;
           }
           // console.log(Object.keys(el).length);
@@ -214,6 +212,9 @@ export default {
       });
       if (!isAllFull)
         return this.$message.warning("请注意是否还有未输入的内容");
+      this.addSkuList.forEach(el => {
+        el.spData = JSON.stringify(el.spData);
+      });
       this.$message.success("获取skuList成功");
       this.$emit("getskuList", this.addSkuList);
       this.handleClose();
@@ -247,6 +248,9 @@ export default {
     },
     // 打开弹窗
     openDialog() {
+      this.addSkuList.forEach(el => {
+        el.spData = JSON.parse(el.spData);
+      });
       this.dialogVisible = true;
     }
   }

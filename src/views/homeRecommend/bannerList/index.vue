@@ -112,7 +112,7 @@
 </template>
 <script>
 import addB from "./add/Detail.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   addAds,
   delAds,
@@ -122,7 +122,7 @@ import {
 export default {
   name: "BannerList",
 
-  components: { copyright, addB },
+  components: { addB },
 
   data() {
     return {

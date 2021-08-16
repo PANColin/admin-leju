@@ -170,7 +170,7 @@
   </div>
 </template>
 <script>
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   addArticle,
   changeShowStatus,
@@ -182,7 +182,7 @@ import {
 export default {
   name: "ArticleList",
 
-  components: { copyright },
+  components: { },
 
   data() {
     return {

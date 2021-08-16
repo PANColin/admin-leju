@@ -56,10 +56,10 @@ import {
   uploadFileOssSave,
   delMaterial
 } from "@/api/material/index";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 export default {
   name: "MaterialList",
-  components: { copyright, UploadImg },
+  components: { UploadImg },
   data() {
     return {
       list: [],

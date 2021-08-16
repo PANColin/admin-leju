@@ -219,7 +219,7 @@
   </div>
 </template>
 <script>
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   findOrdersByPage as findOrdersByPageAPI,
   finishOrder,
@@ -230,7 +230,7 @@ import {
 export default {
   name: "orderList",
 
-  components: { copyright },
+  components: { },
 
   data() {
     return {

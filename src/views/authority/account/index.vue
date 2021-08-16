@@ -144,7 +144,7 @@
 </template>
 <script>
 import Detail from "./Detail.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   getInitMenus,
   findUsersByPage as findUsersByPageAPI,
@@ -156,7 +156,7 @@ import {
 export default {
   name: "Account",
 
-  components: { copyright, Detail },
+  components: { Detail },
   computed: {
     key() {
       return new Date().getTime();

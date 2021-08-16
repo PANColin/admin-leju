@@ -120,7 +120,7 @@
   </div>
 </template>
 <script>
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import Detail from "./Detail.vue";
 import {
   addressList as addressListAPI,
@@ -134,7 +134,7 @@ import {
 export default {
   name: "Address",
 
-  components: { copyright, Detail },
+  components: { Detail },
 
   data() {
     return {

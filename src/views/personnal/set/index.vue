@@ -100,11 +100,11 @@
 </template>
 
 <script>
-import copyright from '@/components/copyright/index.vue'
+// import copyright from '@/components/copyright/index.vue'
 
 export default {
   name: 'Set',
-  components: { copyright },
+  components: { },
   data() {
     return {
       //是否是内容较少的tabs栏

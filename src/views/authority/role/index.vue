@@ -92,7 +92,7 @@
 </template>
 <script>
 import Detail from "./Detail.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   findAllRoles,
   findRolePermissions,
@@ -104,7 +104,7 @@ import {
 export default {
   name: "Role",
 
-  components: { copyright, Detail },
+  components: { Detail },
 
   data() {
     return {

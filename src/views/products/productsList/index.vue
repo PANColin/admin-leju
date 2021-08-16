@@ -311,7 +311,7 @@
 </template>
 <script>
 import skuDetail from "./sku/index.vue";
-import copyright from "@/components/copyright/index.vue";
+// import copyright from "@/components/copyright/index.vue";
 import {
   addProductAndSkus,
   del,
@@ -328,7 +328,7 @@ import { findAllBrand } from "@/api/brand/index";
 export default {
   name: "goodsList",
 
-  components: { copyright, skuDetail },
+  components: { skuDetail },
 
   data() {
     return {
