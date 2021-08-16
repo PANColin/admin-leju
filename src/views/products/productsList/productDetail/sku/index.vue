@@ -248,7 +248,10 @@ export default {
     },
     // 打开弹窗
     openDialog() {
+      // console.log(this.addSkuList);
       this.addSkuList.forEach(el => {
+        // console.log(el);
+        if (Array.isArray(el.spData)) return;
         el.spData = JSON.parse(el.spData);
       });
       this.dialogVisible = true;
