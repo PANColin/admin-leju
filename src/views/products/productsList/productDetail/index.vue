@@ -488,7 +488,7 @@ export default {
       this.pmsSkuStockList.forEach(el => {
         el.spData = JSON.parse(el.spData);
       });
-      console.log(data);
+      // console.log(data);
     }
   },
   async mounted() {

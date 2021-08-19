@@ -252,9 +252,12 @@ export default {
       this.checkIsAll();
       if (!this.isAllFull)
         return this.$message.warning("请注意是否还有未输入的内容");
-      this.addSkuList.forEach(el => {
-        el.spData = JSON.stringify(el.spData);
-      });
+      if (Array.isArray(this.addSkuList)) {
+        this.addSkuList.forEach(el => {
+          if (!Array.isArray(el.spData)) return;
+          el.spData = JSON.stringify(el.spData);
+        });
+      }
       this.dialogVisible = false;
       // console.log("关闭...");
     },
