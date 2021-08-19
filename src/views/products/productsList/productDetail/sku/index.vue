@@ -4,6 +4,7 @@
       title="编辑sku"
       :visible.sync="dialogVisible"
       custom-class="dialog"
+      :before-close="handleClose"
     >
       <el-button type="primary" size="default" @click="addSku">新增</el-button>
 
@@ -167,7 +168,8 @@ export default {
   data() {
     return {
       addSkuList: [],
-      dialogVisible: false // 用于控制弹窗是否打开
+      dialogVisible: false, // 用于控制弹窗是否打开
+      isAllFull: false //检查sku是否是全部信息填写完毕
     };
   },
   methods: {
@@ -176,8 +178,8 @@ export default {
       // console.log(index, item);
       this.addSkuList.splice(index, 1);
     },
-    // 获取skuList
-    getskuList() {
+    //检查sku是否全部信息填写完毕
+    checkIsAll() {
       const continueArr = [
         "spData",
         "createTime",
@@ -186,7 +188,7 @@ export default {
         "promotionPrice",
         "modifyTime"
       ];
-      const isAllFull = this.addSkuList.every(el => {
+      this.isAllFull = this.addSkuList.every(el => {
         // console.log(el);
         let count = 0;
         for (let val in el) {
@@ -210,7 +212,11 @@ export default {
           }
         }
       });
-      if (!isAllFull)
+    },
+    // 获取skuList
+    getskuList() {
+      this.checkIsAll();
+      if (!this.isAllFull)
         return this.$message.warning("请注意是否还有未输入的内容");
       this.addSkuList.forEach(el => {
         el.spData = JSON.stringify(el.spData);
@@ -243,6 +249,12 @@ export default {
     },
     // 弹窗关闭的时候触发
     handleClose() {
+      this.checkIsAll();
+      if (!this.isAllFull)
+        return this.$message.warning("请注意是否还有未输入的内容");
+      this.addSkuList.forEach(el => {
+        el.spData = JSON.stringify(el.spData);
+      });
       this.dialogVisible = false;
       // console.log("关闭...");
     },

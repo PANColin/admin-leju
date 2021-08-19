@@ -9,6 +9,7 @@
       :before-upload="beforeUpload"
       :multiple="isMultiple"
       :limit="limitNumber"
+      :on-exceed="handleExceed"
       :show-file-list="false"
       :action="baseUrl + uploadUrl"
       :on-change="changeUpload"
@@ -161,6 +162,14 @@ export default {
         this.$message.error("上传头像图片大小不能超过1.5MB!");
       }
       return isImg && isOver;
+    },
+    //超出限制
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 ${this.limitNumber} 个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件,请重新选择`
+      );
     },
     // 删除图片
     removeCoverImg(index) {

@@ -286,7 +286,7 @@
             <el-col :span="8" :offset="0">
               <el-form-item label="标题" prop="title">
                 <el-input
-                  v-model.trim="product.title"
+                  v-model.trim="product.detailTitle"
                   placeholder="请输入标题"
                 ></el-input>
               </el-form-item>
