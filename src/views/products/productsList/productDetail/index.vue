@@ -68,8 +68,8 @@
                   placeholder="上架状态"
                 >
                   <el-option
-                    v-for="(item, index) in publishStatusList"
-                    :key="index"
+                    v-for="item in publishStatusList"
+                    :key="item.id"
                     :label="item.lable"
                     :value="item.value"
                   >
@@ -88,8 +88,8 @@
                   placeholder="审核状态"
                 >
                   <el-option
-                    v-for="(item, index) in verifyStatusList"
-                    :key="index"
+                    v-for="item in verifyStatusList"
+                    :key="item.id"
                     :label="item.lable"
                     :value="item.value"
                   >
@@ -394,7 +394,7 @@ import {
 export default {
   name: "productDetail",
 
-  components: {  UploadImg, skuDetail, Tinymce },
+  components: { UploadImg, skuDetail, Tinymce },
 
   data() {
     return {
@@ -409,20 +409,20 @@ export default {
       list: [],
       // 搜索部分选择的审核状态列表
       verifyStatusList: [
-        { id: 1, lable: "未审核", value: "0" },
-        { id: 1, lable: "已审核", value: "1" }
+        { id: 1, lable: "未审核", value: 0 },
+        { id: 2, lable: "已审核", value: 1 }
       ],
       // 搜索部分选择的上架状态列表
       publishStatusList: [
-        { id: 1, lable: "未上架", value: "0" },
-        { id: 1, lable: "已上架", value: "1" }
+        { id: 1, lable: "未上架", value: 0 },
+        { id: 2, lable: "已上架", value: 1 }
       ],
       // 搜索部分选择的上架状态列表
       categoryList: [
         { id: 1, lable: "创意", value: "创意" },
-        { id: 1, lable: "风格", value: "风格" },
-        { id: 1, lable: "饰品", value: "饰品" },
-        { id: 1, lable: "灯具", value: "灯具" }
+        { id: 2, lable: "风格", value: "风格" },
+        { id: 3, lable: "饰品", value: "饰品" },
+        { id: 4, lable: "灯具", value: "灯具" }
       ],
       // 搜索部分选择的品牌列表
       brandList: [],
@@ -488,7 +488,7 @@ export default {
       this.pmsSkuStockList.forEach(el => {
         el.spData = JSON.parse(el.spData);
       });
-      // console.log(data);
+      console.log(data);
     }
   },
   async mounted() {
@@ -510,14 +510,17 @@ export default {
       this.product.detailDesc = this.tinContent;
       this.product.detailHtml = this.tinContent;
       // 保存之前检查sku是否填写
-      if (this.pmsSkuStockList.length <= 0) return this.$message.warning("请检查sku列表是否填写");
+      if (this.pmsSkuStockList.length <= 0)
+        return this.$message.warning("请检查sku列表是否填写");
 
       let params, api, msg;
       if (this.$route.meta.isEdit) {
         // console.log( this.product);
         api = updateProductAndSkus;
-        if(Array.isArray(this.product.albumPics) && Array.isArray(this.product.serviceIds) ){
-
+        if (
+          Array.isArray(this.product.albumPics) &&
+          Array.isArray(this.product.serviceIds)
+        ) {
           this.product.albumPics = this.product?.albumPics?.join(",");
           this.product.serviceIds = this.product?.serviceIds.join(",");
         }
