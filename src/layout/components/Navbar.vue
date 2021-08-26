@@ -27,7 +27,13 @@
           <a target="_blank" href="https://pancolin.github.io/Ugou-h5/">
             <el-dropdown-item>U购</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://pancolin.github.io/bufan/">
+          <a target="_blank" href="http://pan-colin.gitee.io/douban-film">
+            <el-dropdown-item>豆瓣电影</el-dropdown-item>
+          </a>
+          <a target="_blank" href="http://pan-colin.gitee.io/legou">
+            <el-dropdown-item>非凡 U-Y</el-dropdown-item>
+          </a>
+          <a target="_blank" href="https://pancolin.github.io/tools/">
             <el-dropdown-item>工具</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">

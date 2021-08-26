@@ -11,7 +11,7 @@
       <span>Element-admin</span>
     </div>
     <div class="row2">
-      <span>Copyright© 2017-2020 不凡学院 豫ICP备 17015347号</span>
+      <span>Copyright© 2017-2020 非凡 豫ICP备 17015347号</span>
     </div>
   </div>
 </template>

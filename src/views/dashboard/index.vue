@@ -12,7 +12,7 @@
             ><svg-icon icon-class="full" @click="fullScreen"
           /></span>
           <div class="title">
-            <span>不凡数据大屏</span>
+            <span>数据大屏</span>
           </div>
           <div class="time">{{ timeText }}</div>
         </div>
